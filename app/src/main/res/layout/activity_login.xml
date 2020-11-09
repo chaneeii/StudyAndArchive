@@ -63,13 +63,26 @@
         android:layout_height="wrap_content"/>
 
     <TextView
+        android:id="@+id/recoverPwTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_below="@id/loginBtn"
+        android:layout_marginTop="20dp"
+        android:text="기억이 안나세요? 비밀번호 찾기"/>
+
+
+
+
+    <TextView
         android:id="@+id/nothave_accountTv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="회원이 아니신가요? Sign Up"
-        android:layout_below="@id/loginBtn"
+        android:layout_alignParentBottom="true"
         android:gravity="center_horizontal"
         android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
         android:textColor="@color/colorGray"/>
 
 

@@ -64,6 +64,13 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
+
+    @Override
     protected void onStart() {
         //check on start of app 시작시
         checkUserStatus(); //사용자 로그인 상태 체크
@@ -93,6 +100,8 @@ public class ProfileActivity extends AppCompatActivity {
        }
         return super.onOptionsItemSelected(item);
     }
+
+
 }
 
 
