@@ -12,6 +12,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,6 +27,7 @@ public class RegisterActivity extends AppCompatActivity {
     //views
     EditText mEmailEt, mPasswordEdit;
     Button mRegisterBtn;
+    TextView mHaveAccountTv;
 
     // progressbar to display while registering user
     ProgressDialog progressDialog;
@@ -50,6 +52,7 @@ public class RegisterActivity extends AppCompatActivity {
         mEmailEt = findViewById(R.id.emailEt);
         mPasswordEdit = findViewById(R.id.passwordEt);
         mRegisterBtn = findViewById(R.id.registerBtn);
+        mHaveAccountTv = findViewById(R.id.have_accountTv);
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
@@ -83,16 +86,28 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
+        //handle login texview click listener
+        mHaveAccountTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+            }
+        });
+
+
+
 
     }
 
 
+    //나중에 지우고 테스트 해보기 #######
     @Override
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null)
         FirebaseUser currentUser = mAuth.getCurrentUser();
     }
+
 
     private void registerUser(String email, String password) {
         // 이메일과 비밀번호가 유효한다면, progress dialog를 보여주고 사용자 등록을 시작한다.
