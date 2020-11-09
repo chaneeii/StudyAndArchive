@@ -8,6 +8,9 @@
     android:gravity="center"
     tools:context=".ProfileActivity">
 
+<!--    show email of logged in user-->
+
+
     <TextView
         android:id="@+id/profileTV"
         android:text="Profile"
