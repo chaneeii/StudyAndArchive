@@ -1,72 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
     tools:context=".ProfileFragment">
 
-    <RelativeLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="180dp"
-            android:background="@color/colorPrimary">
+            android:layout_height="wrap_content">
 
-        </RelativeLayout>
+            <ImageView
+                android:id="@+id/coverIv"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:scaleType="fitXY"
+                android:background="@color/colorPrimary">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:orientation="horizontal"
-            android:layout_marginTop="100dp">
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/avatarIv"
-                android:padding="5dp"
-                android:src="@drawable/ic_add_image"
-                android:layout_width="110dp"
-                android:layout_height="110dp"
-                android:layout_marginLeft="20dp"
-                app:civ_border_width="2dp"
-                app:civ_border_color="@color/colorWhite"/>
+            </ImageView>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="120dp"
+                android:orientation="horizontal"
+                android:layout_marginTop="100dp">
 
-                <TextView
-                    android:id="@+id/nameTv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:textSize="25sp"
-                    android:textColor="@color/colorWhite"
-                    android:layout_marginLeft="5dp"/>
-                <TextView
-                    android:id="@+id/emailTv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:textColor="@color/colorWhite"
-                    android:layout_marginLeft="5dp"/>
-                <TextView
-                    android:id="@+id/fieldTv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:textColor="@color/colorWhite"
-                    android:layout_marginLeft="5dp"/>
+                <de.hdodenhof.circleimageview.CircleImageView
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/avatarIv"
+                    android:padding="2dp"
+                    android:src="@drawable/ic_default_img_white"
+                    android:layout_width="110dp"
+                    android:layout_height="110dp"
+                    android:layout_marginLeft="20dp"
+                    app:civ_border_width="1dp"
+                    app:civ_border_color="@color/colorGray"/>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="vertical"
+                    android:background="#50000000">
+
+                    <TextView
+                        android:id="@+id/nameTv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:textSize="25sp"
+                        android:textColor="@color/colorWhite"
+                        android:layout_marginLeft="5dp"/>
+                    <TextView
+                        android:id="@+id/emailTv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:textColor="@color/colorWhite"
+                        android:layout_marginLeft="5dp"/>
+                    <TextView
+                        android:id="@+id/fieldTv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:textColor="@color/colorWhite"
+                        android:layout_marginLeft="5dp"/>
+
+                </LinearLayout>
 
             </LinearLayout>
 
-        </LinearLayout>
+        </RelativeLayout>
 
-    </RelativeLayout>
+    </ScrollView>
 
-</ScrollView>
+    <!--Floating Action Button -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:src="@drawable/ic_edit_white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="10dp"
+        android:layout_alignParentRight="true" />
+
+</RelativeLayout>

@@ -140,6 +140,7 @@ public class RegisterActivity extends AppCompatActivity {
                             hashMap.put("image","");
                             hashMap.put("bio","");
                             hashMap.put("field","");
+                            hashMap.put("cover",""); //커버사진
                             //firebase database instance
                             FirebaseDatabase database = FirebaseDatabase.getInstance();
                             //path to store user data named "Users"
