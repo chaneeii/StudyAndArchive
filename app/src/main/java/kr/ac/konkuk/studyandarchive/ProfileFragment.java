@@ -13,6 +13,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -22,9 +23,11 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -160,6 +163,8 @@ public class ProfileFragment extends Fragment {
         fieldTv = view.findViewById(R.id.fieldTv);
         fab = view.findViewById(R.id.fab);
 
+
+
         //init progress dialog
         pd = new ProgressDialog(getActivity());
 
@@ -272,11 +277,11 @@ public class ProfileFragment extends Fragment {
         * */
 
         // options to show in dialog
-        String options[] = {"프로필 사진 수정", "커버 사진 수정", "이름 수정", "스터디 필드 수정"};
+        String options[] = {"프로필 사진 업데이트", "커버 사진 업데이트", "이름 업데이트", "학습분야 업데이트"};
         //alert Dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         //set Title
-        builder.setTitle("수정하려는 항목을 고르세요");
+        builder.setTitle("업데이트할 항목을 고르세요");
         //set items to dialog
         builder.setItems(options, new DialogInterface.OnClickListener() {
             @Override
@@ -304,8 +309,8 @@ public class ProfileFragment extends Fragment {
                 }
                 else if(which ==3){
                     // 스터디 필드 수정
-                    pd.setMessage("스터디 필드 업데이트");
-                    showTextUpdateDialog("field");
+                    pd.setMessage("학습분야 업데이트");
+                    showFieldUpdateDialog();
 
                 }else{
 
@@ -316,6 +321,78 @@ public class ProfileFragment extends Fragment {
         builder.create().show();
 
     }
+
+    private void showFieldUpdateDialog() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        View mView = getLayoutInflater().inflate(R.layout.dialog_study_field, null);
+        builder.setTitle("What are you studying?");
+        final Spinner mSpinner =(Spinner) mView.findViewById(R.id.spinner);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_spinner_item,
+                getResources().getStringArray(R.array.fieldList));
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSpinner.setAdapter(adapter);
+
+        builder.setView(mView);
+
+        builder.setPositiveButton("선택완료", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+//                if(! mSpinner.getSelectedItem().toString().equalsIgnoreCase("학습분야 선택")){
+//                    Toast.makeText(getActivity(), "학습분야: "+mSpinner.getSelectedItem().toString(), Toast.LENGTH_SHORT).show();
+//                }
+
+
+                // edit text로 부터 text input하기
+                String value = mSpinner.getSelectedItem().toString();
+                // 사용자가 인풋을 입ㄺ햇는지 아닌지 체크
+                if(! mSpinner.getSelectedItem().toString().equalsIgnoreCase("학습분야 선택")){
+                    pd.show();
+                    HashMap<String, Object> result = new HashMap<>();
+                    result.put("field", value);
+
+                    databaseReference.child(user.getUid()).updateChildren(result)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    // 업데이트 됨
+                                    pd.dismiss();
+                                    Toast.makeText(getActivity(), "학습분야가 업데이트 되었습니다.", Toast.LENGTH_SHORT).show();
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    // 업데이트 실패
+                                    pd.dismiss();
+                                    Toast.makeText(getActivity(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                                }
+                            });
+
+                }
+                else{
+                    Toast.makeText(getActivity(), "입력해주세요", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
+        builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+
+
+    }
+
 
     private void showTextUpdateDialog(final String key) {
         /*
