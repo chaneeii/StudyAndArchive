@@ -310,7 +310,8 @@ public class ProfileFragment extends Fragment {
                 else if(which ==3){
                     // 스터디 필드 수정
                     pd.setMessage("학습분야 업데이트");
-                    showFieldUpdateDialog();
+//                    showFieldUpdateDialog(); 드랍다운스타일
+                    showFieldOfStudyUpdateDialog();
 
                 }else{
 
@@ -322,6 +323,72 @@ public class ProfileFragment extends Fragment {
 
     }
 
+    //리스트스타일
+    private void showFieldOfStudyUpdateDialog() {
+
+        AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
+
+        final String[] fieldList = getResources().getStringArray(R.array.fieldList);
+
+        final int[] selectedIndex = {0};
+
+        dialog.setTitle("학습분야를 선택하세요")
+                .setSingleChoiceItems(fieldList, 0,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                selectedIndex[0] =which;
+                            }
+                        })
+                .setPositiveButton("선택완료", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // edit text로 부터 text input하기
+                        String value = fieldList[selectedIndex[0]];
+                        // 사용자가 인풋을 입ㄺ햇는지 아닌지 체크
+                        if(! value.isEmpty()){
+                            pd.show();
+                            HashMap<String, Object> result = new HashMap<>();
+                            result.put("field", value);
+
+                            databaseReference.child(user.getUid()).updateChildren(result)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            // 업데이트 됨
+                                            pd.dismiss();
+                                            Toast.makeText(getActivity(), "학습분야가 업데이트 되었습니다.", Toast.LENGTH_SHORT).show();
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            // 업데이트 실패
+                                            pd.dismiss();
+                                            Toast.makeText(getActivity(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                                        }
+                                    });
+
+                        }
+                        else{
+                            Toast.makeText(getActivity(), "입력해주세요", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .create().show();
+
+
+
+    }
+
+    // 드랍다운스타일
     private void showFieldUpdateDialog() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -392,6 +459,8 @@ public class ProfileFragment extends Fragment {
 
 
     }
+
+
 
 
     private void showTextUpdateDialog(final String key) {
