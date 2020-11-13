@@ -1,18 +1,27 @@
 package kr.ac.konkuk.studyandarchive;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link HomeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+///**
+// * A simple {@link Fragment} subclass.
+// * Use the {@link HomeFragment#newInstance} factory method to
+// * create an instance of this fragment.
+// */
 public class HomeFragment extends Fragment {
 
 //    // TODO: Rename parameter arguments, choose names that match
@@ -24,6 +33,8 @@ public class HomeFragment extends Fragment {
 //    private String mParam1;
 //    private String mParam2;
 //
+    FirebaseAuth firebaseAuth;
+
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -58,7 +69,67 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+        //init
+        firebaseAuth =FirebaseAuth.getInstance();
+
+        return  view;
     }
+
+
+    private  void checkUserStatus(){
+
+        //get current user
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+
+        if(user !=null){
+            //user is signed in stay here
+            // 만약 로그인 되어있다면 홈보여주기
+
+
+        }else{
+            //user not signed in, go to main activity
+            // 로그인이 안되있다면, 메인으로이동해서 로그인. 회원가입 둘중하게하도록
+            startActivity(new Intent(getActivity(), MainActivity.class));
+            getActivity().finish();
+        }
+
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        setHasOptionsMenu(true); // to show menu option in framgent
+        super.onCreate(savedInstanceState);
+    }
+
+    /*inflate option menu*/
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+
+        menu.clear();
+
+        //inflating menu
+        inflater.inflate(R.menu.menu_main, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+
+    }
+
+    /*Handle menu item clicks*/
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        //get item id
+        int id = item.getItemId();
+        if(id == R.id.action_logout){
+            firebaseAuth.signOut();
+            checkUserStatus(); //로그인안되면 메인감감
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }

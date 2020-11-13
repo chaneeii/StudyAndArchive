@@ -18,6 +18,9 @@ import androidx.fragment.app.Fragment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -738,5 +741,52 @@ public class ProfileFragment extends Fragment {
         startActivityForResult(galleryIntent, IMAGE_PICK_GALLERY_CODE);
     }
 
+    private  void checkUserStatus(){
+
+        //get current user
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+
+        if(user !=null){
+            //user is signed in stay here
+            // 만약 로그인 되어있다면 홈보여주기
+
+
+        }else{
+            //user not signed in, go to main activity
+            // 로그인이 안되있다면, 메인으로이동해서 로그인. 회원가입 둘중하게하도록
+            startActivity(new Intent(getActivity(), MainActivity.class));
+            getActivity().finish();
+        }
+
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        setHasOptionsMenu(true); // to show menu option in framgent
+        super.onCreate(savedInstanceState);
+    }
+
+    /*inflate option menu*/
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        //inflating menu
+        inflater.inflate(R.menu.menu_main, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+
+    }
+
+    /*Handle menu item clicks*/
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        //get item id
+        int id = item.getItemId();
+        if(id == R.id.action_logout){
+            firebaseAuth.signOut();
+            checkUserStatus(); //로그인안되면 메인감감
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
 }
