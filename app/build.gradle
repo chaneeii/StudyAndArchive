@@ -27,6 +27,7 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.2'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
@@ -38,8 +39,15 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
 
 
-    // Import the BoM for the Firebase platform
+    // Import the BoM for the Firebase platform realtime and storage
     implementation platform('com.google.firebase:firebase-bom:25.12.0')
     implementation 'com.google.firebase:firebase-database'
+
+    //picasso
+    implementation 'com.squareup.picasso:picasso:2.71828'
+
+    //circle image view
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+
 
 }

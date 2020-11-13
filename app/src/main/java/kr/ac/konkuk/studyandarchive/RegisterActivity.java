@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -153,7 +152,7 @@ public class RegisterActivity extends AppCompatActivity {
 
 
                             Toast.makeText(RegisterActivity.this, "회원가입이 완료되었습니다.\n"+user.getEmail(),Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(RegisterActivity.this, ProfileActivity.class));
+                            startActivity(new Intent(RegisterActivity.this, DashboardActivity.class));
                             finish();
                         } else {
                             // If sign in fails, display a message to the user.
