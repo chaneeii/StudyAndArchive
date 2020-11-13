@@ -30,11 +30,11 @@
                 android:orientation="horizontal"
                 android:layout_marginTop="97dp">
 
-                <de.hdodenhof.circleimageview.CircleImageView
+                <com.blogspot.atifsoftwares.circularimageview.CircularImageView
                     xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/avatarIv"
                     android:padding="2dp"
-                    android:src="@drawable/ic_default_img_white"
+                    android:src="@drawable/ic_default_img_purple"
                     android:layout_width="110dp"
                     android:layout_height="110dp"
                     android:layout_marginLeft="20dp"
@@ -54,6 +54,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
                         android:textSize="25sp"
+                        android:text="Your name"
                         android:textColor="@color/colorWhite"
                         android:layout_marginLeft="5dp"/>
                     <TextView
@@ -61,13 +62,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
+                        android:text="Your email"
                         android:textColor="@color/colorWhite"
                         android:layout_marginLeft="5dp"/>
                     <TextView
                         android:id="@+id/fieldTv"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
+                        android:text="Your Academical Field"
                         android:textColor="@color/colorWhite"
                         android:layout_marginLeft="5dp"
                         android:layout_marginBottom="3dp"/>
