@@ -5,7 +5,6 @@
 
 
     <string-array name="fieldList">
-        <item>학습분야 선택</item>
         <item>고등학생</item>
         <item>N수</item>
         <item>간호</item>

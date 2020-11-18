@@ -1,6 +1,8 @@
 package kr.ac.konkuk.studyandarchive;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
@@ -39,8 +42,10 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder>{
         // inflate layout(row_user.xml)
         View view = LayoutInflater.from(context).inflate(R.layout.row_users, viewGroup,false);
 
+
         return new MyHolder(view);
     }
+
 
     @Override
     public void onBindViewHolder(@NonNull MyHolder myHolder, int i) { //i = position
@@ -49,9 +54,17 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder>{
         final String userName = userList.get(i).getName();
         final String userField = userList.get(i).getField();
 
+        if(userField.equals("디자인")){
+            myHolder.mFieldTv.setBackground(ContextCompat.getDrawable(context, R.drawable.radius_yellow));
+            myHolder.mFieldTv.setTextColor(Color.parseColor("#ffffff"));
+        }
+
+
+
         //setData
         myHolder.mNameTv.setText(userName);
         myHolder.mFieldTv.setText(userField);
+
         try{
             Picasso.get().load(userImage).
                     placeholder(R.drawable.ic_default_img_purple).
@@ -91,6 +104,7 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder>{
             mAvatarIv =itemView.findViewById(R.id.avatarIv);
             mNameTv =itemView.findViewById(R.id.nameTv);
             mFieldTv =itemView.findViewById(R.id.fieldTv);
+
 
         }
     }

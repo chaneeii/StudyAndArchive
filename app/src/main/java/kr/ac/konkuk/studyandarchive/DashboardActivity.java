@@ -40,6 +40,8 @@ public class DashboardActivity extends AppCompatActivity {
         //firebase
         firebaseAuth = FirebaseAuth.getInstance();
 
+//        String username = firebaseAuth.getCurrentUser().getDisplayName();
+
 
         //Actionbar and its title
         actionBar = getSupportActionBar();
@@ -65,6 +67,7 @@ public class DashboardActivity extends AppCompatActivity {
     // nav bar listener
     private BottomNavigationView.OnNavigationItemSelectedListener selectedListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
+
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                     //handle item clicks

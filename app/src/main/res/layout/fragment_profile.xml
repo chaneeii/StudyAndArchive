@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorWhite"
     tools:context=".ProfileFragment">
 
@@ -28,7 +28,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="120dp"
                 android:orientation="horizontal"
-                android:layout_marginTop="97dp">
+                android:layout_marginTop="85dp"
+                >
+
 
                 <com.blogspot.atifsoftwares.circularimageview.CircularImageView
                     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -65,13 +67,31 @@
                         android:text="Your email"
                         android:textColor="@color/colorWhite"
                         android:layout_marginLeft="5dp"/>
+
+<!--                    <com.google.android.material.chip.Chip-->
+<!--                        android:id="@+id/fieldChip"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:textSize="12sp"-->
+<!--                        app:chipBackgroundColor="@color/chipColor"-->
+<!--                        android:textColor="#000000"-->
+<!--                        android:text="Banana"/>-->
+
+
                     <TextView
                         android:id="@+id/fieldTv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
                         android:text="Your Academical Field"
+                        android:background="@drawable/radius"
                         android:textColor="@color/colorWhite"
+                        android:textSize="12sp"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:layout_marginTop="5dp"
                         android:layout_marginLeft="5dp"
                         android:layout_marginBottom="3dp"/>
 
