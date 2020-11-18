@@ -17,6 +17,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Chronometer;
 
+import com.google.firebase.auth.FirebaseUser;
+
 import java.text.SimpleDateFormat;
 
 import static android.service.controls.ControlsProviderService.TAG;
