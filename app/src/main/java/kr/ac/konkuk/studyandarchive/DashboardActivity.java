@@ -96,7 +96,14 @@ public class DashboardActivity extends AppCompatActivity {
                             ft3.replace(R.id.container, fragment3, "");
                             ft3.commit();
                             return true;
-
+                        case R.id.nav_add:
+                            //users fragment transaction
+                            actionBar.setTitle("Study"); // actionbar 타이틀 바꾸기
+                            RecordFragment fragment4 = new RecordFragment();
+                            FragmentTransaction ft4 = getSupportFragmentManager().beginTransaction();
+                            ft4.replace(R.id.container, fragment4, "");
+                            ft4.commit();
+                            return true;
                     }
 
                     return false;

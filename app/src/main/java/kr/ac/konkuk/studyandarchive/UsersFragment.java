@@ -238,6 +238,10 @@ public class UsersFragment extends Fragment {
         inflater.inflate(R.menu.menu_main, menu);
         super.onCreateOptionsMenu(menu, inflater);
 
+
+
+
+
         //search view
         MenuItem item = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
@@ -291,6 +295,7 @@ public class UsersFragment extends Fragment {
             firebaseAuth.signOut();
             checkUserStatus(); //로그인안되면 메인감감
         }
+
         return super.onOptionsItemSelected(item);
     }
 
