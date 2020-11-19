@@ -30,6 +30,7 @@ import com.squareup.picasso.Picasso;
 import java.util.Date;
 import java.util.List;
 
+import kr.ac.konkuk.studyandarchive.DashboardActivity;
 import kr.ac.konkuk.studyandarchive.R;
 import kr.ac.konkuk.studyandarchive.fragment.ProfileFragment;
 import kr.ac.konkuk.studyandarchive.models.ModelUser;
@@ -42,11 +43,13 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder>{
     Context context;
     List<ModelUser> userList;
     FirebaseUser firebaseUser;
+    private boolean isfragment;
 
     //constructor
-    public AdapterUsers(Context context, List<ModelUser> userList) {
+    public AdapterUsers(Context context, List<ModelUser> userList, boolean isfragment) {
         this.context = context;
         this.userList = userList;
+        this.isfragment = isfragment;
     }
 
 
@@ -99,15 +102,18 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder>{
             @Override
             public void onClick(View v) {
 //                Toast.makeText(context, ""+userName, Toast.LENGTH_SHORT).show();
-                SharedPreferences.Editor editor =context.getSharedPreferences("PREFS", Context.MODE_PRIVATE).edit();
-                editor.putString("profileid", user.getUid());
-                editor.apply();
+                if(isfragment){
+                    SharedPreferences.Editor editor =context.getSharedPreferences("PREFS", Context.MODE_PRIVATE).edit();
+                    editor.putString("profileid", user.getUid());
+                    editor.apply();
+                    ((FragmentActivity)context).getSupportFragmentManager().beginTransaction().replace(R.id.container,
+                            new ProfileFragment()).commit();
+                }else{
+                    Intent intent = new Intent(context, DashboardActivity.class);
+                    intent.putExtra("uid",user.getUid());
+                    context.startActivity(intent);
+                }
 
-//                Intent intent=new Intent(context,ProfileFragment.class);
-//                intent.putExtra("uid",user.getUid());
-
-                ((FragmentActivity)context).getSupportFragmentManager().beginTransaction().replace(R.id.container,
-                        new ProfileFragment()).commit();
 
             }
         });

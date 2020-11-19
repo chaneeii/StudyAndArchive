@@ -105,7 +105,7 @@ public class UsersFragment extends Fragment {
                         userList.add(modelUser);
                     }
                     //adapter
-                    adapterUsers = new AdapterUsers(getActivity(), userList);
+                    adapterUsers = new AdapterUsers(getActivity(), userList, true);
                     //set adapter to recycler view
                     recyclerView.setAdapter(adapterUsers);
 //                    Log.d(TAG, "onDataChange: "+userList);
@@ -151,7 +151,7 @@ public class UsersFragment extends Fragment {
                         }
                     }
                     //adapter
-                    adapterUsers = new AdapterUsers(getActivity(), userList);
+                    adapterUsers = new AdapterUsers(getActivity(), userList,true);
 
                     //regresh adapter
                     adapterUsers.notifyDataSetChanged();

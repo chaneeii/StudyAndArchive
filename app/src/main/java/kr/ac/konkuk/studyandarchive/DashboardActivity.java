@@ -3,6 +3,7 @@ package kr.ac.konkuk.studyandarchive;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -32,11 +33,15 @@ public class DashboardActivity extends AppCompatActivity {
     //views
     ActionBar actionBar;
 
+    Fragment selectedFragment = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+
+
 
         //firebase
         firebaseAuth = FirebaseAuth.getInstance();
@@ -76,9 +81,9 @@ public class DashboardActivity extends AppCompatActivity {
                         case R.id.nav_home:
                             //home fragment transaction
                             actionBar.setTitle("Home"); // actionbar 타이틀 바꾸기
-                            HomeFragment fragment1 = new HomeFragment();
+                            selectedFragment = new HomeFragment();
                             FragmentTransaction ft1 = getSupportFragmentManager().beginTransaction();
-                            ft1.replace(R.id.container, fragment1, "");
+                            ft1.replace(R.id.container, selectedFragment , "");
                             ft1.commit();
                             return true;
                         case R.id.nav_profile:
@@ -87,8 +92,7 @@ public class DashboardActivity extends AppCompatActivity {
                             SharedPreferences.Editor editor = getSharedPreferences("PREFS", Context.MODE_PRIVATE).edit();
                             editor.putString("profileid", FirebaseAuth.getInstance().getCurrentUser().getUid());
                             editor.apply();
-                            ProfileFragment fragment2 = new ProfileFragment();
-
+//                            ProfileFragment fragment2 = new ProfileFragment();
                             getSupportFragmentManager().beginTransaction().replace(R.id.container,
                                     new ProfileFragment()).commit();
 
@@ -101,30 +105,34 @@ public class DashboardActivity extends AppCompatActivity {
                         case R.id.nav_users:
                             //users fragment transaction
                             actionBar.setTitle("Users"); // actionbar 타이틀 바꾸기
-                            UsersFragment fragment3 = new UsersFragment();
+                            selectedFragment = new UsersFragment();
                             FragmentTransaction ft3 = getSupportFragmentManager().beginTransaction();
-                            ft3.replace(R.id.container, fragment3, "");
+                            ft3.replace(R.id.container, selectedFragment, "");
                             ft3.commit();
                             return true;
                         case R.id.nav_add:
                             //users fragment transaction
                             actionBar.setTitle("Study"); // actionbar 타이틀 바꾸기
-                            RecordFragment fragment4 = new RecordFragment();
+                            selectedFragment = new RecordFragment();
                             FragmentTransaction ft4 = getSupportFragmentManager().beginTransaction();
-                            ft4.replace(R.id.container, fragment4, "");
+                            ft4.replace(R.id.container, selectedFragment, "");
                             ft4.commit();
                             return true;
                         case R.id.nav_notification:
                             //users fragment transaction
                             actionBar.setTitle("Notification"); // actionbar 타이틀 바꾸기
-                            NotificationFragment fragment5 = new NotificationFragment();
+                            selectedFragment = new NotificationFragment();
                             FragmentTransaction ft5 = getSupportFragmentManager().beginTransaction();
-                            ft5.replace(R.id.container, fragment5, "");
+                            ft5.replace(R.id.container, selectedFragment, "");
                             ft5.commit();
                             return true;
                     }
 
-                    return false;
+                    if (selectedFragment ==null){
+
+                    }
+
+                    return true;
                 }
             };
 

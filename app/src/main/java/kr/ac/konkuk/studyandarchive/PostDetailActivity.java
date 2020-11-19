@@ -165,6 +165,16 @@ public class PostDetailActivity extends AppCompatActivity {
             }
         });
 
+        pLikesTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PostDetailActivity.this, FollowersActivity.class);
+                intent.putExtra("id",postId);
+                intent.putExtra("title","likes");
+                startActivity(intent);
+            }
+        });
+
 //        uPictureIv.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
