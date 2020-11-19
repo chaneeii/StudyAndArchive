@@ -98,7 +98,7 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder>{
         myHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, ""+userName, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(context, ""+userName, Toast.LENGTH_SHORT).show();
                 SharedPreferences.Editor editor =context.getSharedPreferences("PREFS", Context.MODE_PRIVATE).edit();
                 editor.putString("profileid", user.getUid());
                 editor.apply();

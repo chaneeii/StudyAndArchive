@@ -3,11 +3,16 @@ package kr.ac.konkuk.studyandarchive;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
@@ -46,6 +51,7 @@ import java.util.List;
 import java.util.Locale;
 
 import kr.ac.konkuk.studyandarchive.adapters.AdapterComments;
+import kr.ac.konkuk.studyandarchive.fragment.ProfileFragment;
 import kr.ac.konkuk.studyandarchive.models.ModelComment;
 
 public class PostDetailActivity extends AppCompatActivity {
@@ -159,6 +165,22 @@ public class PostDetailActivity extends AppCompatActivity {
             }
         });
 
+//        uPictureIv.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                SharedPreferences.Editor editor =getSharedPreferences("PREFS", Context.MODE_PRIVATE).edit();
+//                editor.putString("profileid", hisUid );
+//                editor.apply();
+//
+//                ProfileFragment fragment2 = new ProfileFragment();
+//
+//                FragmentManager fragmentManager = getSupportFragmentManager();
+//                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//                fragmentTransaction.replace(R.id.container, fragment2);
+//                fragmentTransaction.commit();
+//
+//            }
+//        });
 
 
     }
@@ -464,7 +486,7 @@ public class PostDetailActivity extends AppCompatActivity {
                     myDp = ""+ds.child("image").getValue();
                     myField = ""+ds.child("field").getValue();
 
-                    //setdata
+                    //댓글 달때, 이용중인 사용자 사진 보이기
                     try{
                         // 만약 이미지가 잘 받아와지면
                         Picasso.get().load(myDp).placeholder(R.drawable.ic_default_img_purple).into(cAvatarIv);

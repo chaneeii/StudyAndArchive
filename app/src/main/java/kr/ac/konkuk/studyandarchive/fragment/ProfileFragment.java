@@ -14,8 +14,12 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.MediaStore;
 import android.text.TextUtils;
@@ -29,6 +33,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,10 +55,15 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 import kr.ac.konkuk.studyandarchive.R;
 import kr.ac.konkuk.studyandarchive.StartActivity;
+import kr.ac.konkuk.studyandarchive.adapters.AdapterThumbs;
 import kr.ac.konkuk.studyandarchive.models.ModelPost;
 import kr.ac.konkuk.studyandarchive.models.ModelUser;
 
@@ -98,7 +108,12 @@ public class ProfileFragment extends Fragment {
     String profileOrCoverPhoto;
 
     //프로필 아이디
-    String profileid;
+    String profileid, hisUid;
+
+    //리사이클러뷰 (등록한 게시글 아이템 썸네일 출력용 변수)
+    RecyclerView recyclerView;
+    AdapterThumbs adapterThumbs;
+    List<ModelPost> postList;
 
 
 
@@ -114,6 +129,7 @@ public class ProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
 
+
         // init firebase
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
@@ -124,7 +140,6 @@ public class ProfileFragment extends Fragment {
         //현재 사용자의 프로필인지 다른 사용자의 프로필인지 알기위함
         SharedPreferences prefs = getContext().getSharedPreferences("PREFS", Context.MODE_PRIVATE);
         profileid = prefs.getString("profileid","none");
-
 
 
         // init arrays of permissions
@@ -147,9 +162,18 @@ public class ProfileFragment extends Fragment {
         followBtn = view.findViewById(R.id.followBtn);
 
 
-
         //init progress dialog
         pd = new ProgressDialog(getActivity());
+
+        //리사이클러뷰
+        recyclerView = view.findViewById(R.id.recyclerView);
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager = new GridLayoutManager(getContext(), 3);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        postList = new ArrayList<>();
+        adapterThumbs = new AdapterThumbs(getContext(),postList);
+        recyclerView.setAdapter(adapterThumbs);
+
 
 
 
@@ -206,6 +230,8 @@ public class ProfileFragment extends Fragment {
         userInfo(); // sharedpreference로 받은 profile id 에 맞는 정보 출력
         getFollowers(); //팔로워팔로잉텍스트뷰 세팅
         getNrPosts(); //전체 포스트 개수 세팅
+        myThumbs();
+
 
         if(profileid.equals(user.getUid())){
             followBtn.setVisibility(View.GONE);
@@ -247,6 +273,8 @@ public class ProfileFragment extends Fragment {
 
         return view;
     }
+
+
 
     //shared reference로 받은 profileid에 해당하는 사용자 정보 세팅
     private void userInfo(){
@@ -358,7 +386,9 @@ public class ProfileFragment extends Fragment {
                 int i = 0;
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()){
                     ModelPost post = snapshot.getValue(ModelPost.class);
-                    String hisUid = ""+ dataSnapshot.child("uid").getValue();
+//                    String currentUid = post.getpUid();
+                    hisUid = ""+ dataSnapshot.child("uid").getValue();
+
                     if(hisUid.equals(profileid)){
                         i++;
                     }
@@ -375,7 +405,29 @@ public class ProfileFragment extends Fragment {
         });
     }
 
+    private void myThumbs(){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                postList.clear();
+                for(DataSnapshot snapshot : dataSnapshot.getChildren() ){
+                    ModelPost post = snapshot.getValue(ModelPost.class);
+//                    String hisUid = ""+ dataSnapshot.child("uid").getValue();
+                    if(post.getUid().equals(profileid)){
+                        postList.add(post);
+                    }
+                }
+                Collections.reverse(postList);
+                adapterThumbs.notifyDataSetChanged();
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 
 
 
@@ -977,6 +1029,8 @@ public class ProfileFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         //inflating menu
+
+
 
         inflater.inflate(R.menu.menu_main, menu);
         menu.findItem(R.id.action_search).setVisible(false);
