@@ -164,16 +164,17 @@ public class PostDetailActivity extends AppCompatActivity {
     }
 
     private void loadComments() {
-        //layout(Linear) for recyclerview
+        //layout(Linear) for 리사이클러뷰
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-        //set layout to recycler view
+        //리사이클러뷰에 레이아웃설정
         recyclerView.setLayoutManager(layoutManager);
 
 
-        //init comments lists
+        //init commentlist
         commentList = new ArrayList<>();
 
-        //path of the post, to get it's comments
+
+        // comment를 get하기위한 post 경로
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts").child(postId).child("Comments");
         ref.addValueEventListener(new ValueEventListener() {
             @Override
@@ -184,8 +185,12 @@ public class PostDetailActivity extends AppCompatActivity {
 
                     commentList.add(modelComment);
 
+                    // myUid와 postId를 comment adpater 생성자의 파라미터로 넘김
+
+
+
                     //setup adapter
-                    adapterComments = new AdapterComments(getApplicationContext(), commentList);
+                    adapterComments = new AdapterComments(getApplicationContext(), commentList, myUid, postId);
                     //set adapter
                     recyclerView.setAdapter(adapterComments);
 
@@ -423,6 +428,7 @@ public class PostDetailActivity extends AppCompatActivity {
         //댓글 달리면 증가
         mProcessComment = true;
         final DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts").child(postId);
+
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
