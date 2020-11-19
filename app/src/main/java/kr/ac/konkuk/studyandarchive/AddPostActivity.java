@@ -236,6 +236,9 @@ public class AddPostActivity extends AppCompatActivity {
                             hashMap.put("pStudyTime",studytime);
                             hashMap.put("pUrl",url);
                             hashMap.put("pTime",timeStamp);
+                            hashMap.put("pLikes","0");
+                            hashMap.put("pComments","0");
+
 
 
                             //post 데이터 저장할 곳 레퍼런스

@@ -352,6 +352,9 @@ public class PostDetailActivity extends AppCompatActivity {
 
                     }else {
                         //좋아요를 누르지않았다면, 좋아요표기하기
+                        if (pLikes==null){
+                            pLikes ="0";
+                        }
                         postRef.child(postId).child("pLikes").setValue(""+(Integer.parseInt(pLikes)+1)); //좋아요 추가
                         likeRef.child(postId).child(myUid).setValue("Liked"); // 아무 밸류나 설정해도됨.
                         mProcessLike = false;
