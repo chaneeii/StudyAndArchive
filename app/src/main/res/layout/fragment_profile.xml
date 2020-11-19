@@ -11,94 +11,215 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/coverIv"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="180dp"
-                android:scaleType="fitXY"
-                android:background="@color/colorPrimary">
-            </ImageView>
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/coverIv"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:scaleType="fitXY"
+                    android:background="@color/colorPrimary">
+                </ImageView>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:orientation="horizontal"
-                android:layout_marginTop="85dp"
-                >
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:background="#70000000" />
+                <Button
+                    android:id="@+id/followBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:text="+ FOLLOW"
+                    android:textSize="12sp"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/btn_background_white"
+                    android:textColor="@color/colorPrimary"
+                    android:layout_centerHorizontal="true"
 
+                    />
 
                 <com.blogspot.atifsoftwares.circularimageview.CircularImageView
                     xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/avatarIv"
-                    android:padding="2dp"
+                    android:padding="1dp"
                     android:src="@drawable/ic_default_img_purple"
-                    android:layout_width="110dp"
-                    android:layout_height="110dp"
-                    android:layout_marginLeft="20dp"
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
                     app:civ_border_width="0dp"
-                    app:civ_border_color="@color/colorGray"/>
+                    app:civ_border_color="@color/colorGray"
+                    android:gravity="center"
+                    android:layout_centerInParent="true" />
 
                 <LinearLayout
+                    android:id="@+id/userField"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
                     android:orientation="vertical"
-                    android:background="#50000000">
+                    android:gravity="center"
+                    android:layout_alignParentBottom="true"
 
-                    <TextView
-                        android:id="@+id/nameTv"
+                    >
+                    <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:textSize="25sp"
-                        android:text="Your name"
-                        android:textColor="@color/colorWhite"
-                        android:layout_marginLeft="5dp"/>
-                    <TextView
-                        android:id="@+id/emailTv"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:text="Your email"
-                        android:textColor="@color/colorWhite"
-                        android:layout_marginLeft="5dp"/>
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:id="@+id/nameTv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Username"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="20sp"
+                            android:layout_centerInParent="true"
+                            android:textAlignment="center"
+                            android:gravity="center_horizontal"
+                            android:layout_weight="1"/>
 
-<!--                    <com.google.android.material.chip.Chip-->
-<!--                        android:id="@+id/fieldChip"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:textSize="12sp"-->
-<!--                        app:chipBackgroundColor="@color/chipColor"-->
-<!--                        android:textColor="#000000"-->
-<!--                        android:text="Banana"/>-->
 
+                    </RelativeLayout>
 
                     <TextView
                         android:id="@+id/fieldTv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:text="Your Academical Field"
+                        android:text="컴퓨터/통신"
                         android:background="@drawable/radius"
                         android:textColor="@color/colorWhite"
-                        android:textSize="12sp"
+                        android:textSize="10sp"
                         android:paddingLeft="5dp"
                         android:paddingRight="5dp"
                         android:paddingTop="5dp"
                         android:paddingBottom="5dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginBottom="3dp"/>
-
+                        android:layout_marginTop="2dp"
+                        android:layout_marginBottom="10dp"/>
                 </LinearLayout>
+            </RelativeLayout>
 
+            <!--follwer-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1">
+                    <TextView
+                        android:id="@+id/post_num"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="000"
+                        android:textColor="@color/colorPrimary"
+                        android:layout_gravity="center"
+                        android:textSize="18sp"
+                        android:textStyle="bold"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="posts"
+                        android:layout_gravity="center"
+                        android:textSize="15sp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1">
+                    <TextView
+                        android:id="@+id/follower_num"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="000"
+                        android:textColor="@color/colorPrimary"
+                        android:layout_gravity="center"
+                        android:textSize="18sp"
+                        android:textStyle="bold"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="followers"
+                        android:layout_gravity="center"
+                        android:textSize="15sp" />
+                </LinearLayout>
+                <LinearLayout
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1">
+                    <TextView
+                        android:id="@+id/following_num"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="000"
+                        android:textColor="@color/colorPrimary"
+                        android:layout_gravity="center"
+                        android:textSize="18sp"
+                        android:textStyle="bold"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="followings"
+                        android:layout_gravity="center"
+                        android:textSize="15sp" />
+                </LinearLayout>
             </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#F5F5F0"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-        </RelativeLayout>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:id="@+id/my_archives"
+                    android:text="archive"
+                    android:textColor="@color/colorPrimary"
+                    android:background="@color/colorWhite"/>
+<!--                <View-->
+<!--                    android:layout_width="1dp"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:background="#F5F5F0"/>-->
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:id="@+id/my_study"
+                    android:text="study"
+                    android:textColor="@color/colorPrimary"
+                    android:background="@color/colorWhite"/>
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#F5F5F0"/>
+
+            <!--recycler view-->
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/recyclerView"/>
+
+            <!--recycler view study-->
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:id="@+id/recyclerView_save"/>
+
+        </LinearLayout>
 
     </ScrollView>
 

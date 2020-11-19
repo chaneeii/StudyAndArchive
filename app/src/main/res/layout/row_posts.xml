@@ -27,9 +27,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="300dp"
-            android:background="#70000000"
-            android:contentDescription="hello"
-            android:scaleType="centerCrop" />
+            android:background="#70000000" />
 
         <TextView
             android:id="@+id/post_s_time"

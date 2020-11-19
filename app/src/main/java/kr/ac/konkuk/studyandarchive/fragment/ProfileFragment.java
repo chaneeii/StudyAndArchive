@@ -4,8 +4,10 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -24,6 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -51,14 +54,12 @@ import java.util.HashMap;
 
 import kr.ac.konkuk.studyandarchive.R;
 import kr.ac.konkuk.studyandarchive.StartActivity;
+import kr.ac.konkuk.studyandarchive.models.ModelPost;
+import kr.ac.konkuk.studyandarchive.models.ModelUser;
 
 import static android.app.Activity.RESULT_OK;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ProfileFragment# newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class ProfileFragment extends Fragment {
 
     //firebase
@@ -74,8 +75,9 @@ public class ProfileFragment extends Fragment {
 
     //views from xml
     ImageView avatarIv, coverIv;
-    TextView nameTV, emailTv, fieldTv;
+    TextView nameTV, emailTv, fieldTv, posts, followers, following;
     FloatingActionButton fab;
+    Button archiveBtn, studyBtn, followBtn;
 
     //progress dialog
     ProgressDialog pd;
@@ -95,47 +97,15 @@ public class ProfileFragment extends Fragment {
     //for checking profile or cover photo
     String profileOrCoverPhoto;
 
+    //프로필 아이디
+    String profileid;
 
 
-//    // TODO: Rename parameter arguments, choose names that match
-//    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-//    private static final String ARG_PARAM1 = "param1";
-//    private static final String ARG_PARAM2 = "param2";
-//
-//    // TODO: Rename and change types of parameters
-//    private String mParam1;
-//    private String mParam2;
-//
+
     public ProfileFragment() {
         // Required empty public constructor
     }
 
-//    /**
-//     * Use this factory method to create a new instance of
-//     * this fragment using the provided parameters.
-//     *
-//     * @param param1 Parameter 1.
-//     * @param param2 Parameter 2.
-//     * @return A new instance of fragment ProfileFragment.
-//     */
-//    // TODO: Rename and change types and number of parameters
-//    public static ProfileFragment newInstance(String param1, String param2) {
-//        ProfileFragment fragment = new ProfileFragment();
-//        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
-
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-//        }
-//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -151,6 +121,12 @@ public class ProfileFragment extends Fragment {
         databaseReference = firebaseDatabase.getReference("Users");
         storageReference = FirebaseStorage.getInstance().getReference(); //firebase strage reference
 
+        //현재 사용자의 프로필인지 다른 사용자의 프로필인지 알기위함
+        SharedPreferences prefs = getContext().getSharedPreferences("PREFS", Context.MODE_PRIVATE);
+        profileid = prefs.getString("profileid","none");
+
+
+
         // init arrays of permissions
         cameraPermissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
         storagePermissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
@@ -160,9 +136,15 @@ public class ProfileFragment extends Fragment {
         avatarIv = view.findViewById(R.id.avatarIv);
         coverIv = view.findViewById(R.id.coverIv);
         nameTV = view.findViewById(R.id.nameTv);
-        emailTv = view.findViewById(R.id.emailTv);
+//        emailTv = view.findViewById(R.id.emailTv);
         fieldTv = view.findViewById(R.id.fieldTv);
         fab = view.findViewById(R.id.fab);
+        posts = view.findViewById(R.id.post_num);
+        followers = view.findViewById(R.id.follower_num);
+        following = view.findViewById(R.id.following_num);
+        archiveBtn = view.findViewById(R.id.my_archives);
+        studyBtn = view.findViewById(R.id.my_study);
+        followBtn = view.findViewById(R.id.followBtn);
 
 
 
@@ -171,27 +153,124 @@ public class ProfileFragment extends Fragment {
 
 
 
-        /* 현재 로그인된 유저의 정보를 email 을 통해 가져온다. (uid도 가능)
+        /*
+        * 현재 로그인된 유저의 정보를 email 을 통해 가져온다. (uid도 가능)
         * orderByChild 쿼리를 사용해서, 현재 로그인된 사용자의 email(key로 사용) 과 동일한 이메일을 가진 node의 디테일을 보여줌
         * 이것은 모든 노드를 돌며 key에 맞는 노드 찾음.
         * */
-        Query query = databaseReference.orderByChild("email").equalTo(user.getEmail());
-        query.addValueEventListener(new ValueEventListener() {
+//        Query query = databaseReference.orderByChild("email").equalTo(user.getEmail());
+//        query.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//
+//                //check until required data get
+//                for (DataSnapshot ds : dataSnapshot.getChildren()){
+//                    //get data
+//                    String name = ""+ds.child("name").getValue();
+//                    String email = ""+ds.child("email").getValue();
+//                    String field = ""+ds.child("field").getValue();
+//                    String image = ""+ds.child("image").getValue();
+//                    String cover = ""+ds.child("cover").getValue();
+//
+//                    //set data
+//                    nameTV.setText(name);
+////                    emailTv.setText(email);
+//                    fieldTv.setText(field);
+//                    try{
+//                        //if image is received then set
+//                        Picasso.get().load(image).into(avatarIv);
+//                    }catch(Exception e){
+//                        //if there is any exception while getting image then set default
+//                        Picasso.get().load(R.drawable.ic_default_img_white).into(avatarIv);
+//                    }
+//                    try{
+//                        //if image is received then set
+//                        Picasso.get().load(cover).into(coverIv);
+//                    }catch(Exception e){
+//                        //if there is any exception while getting image then set default
+////                        Picasso.get().load(R.drawable.ic_default_img_white).into(coverIv);
+//                    }
+//
+//
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+
+
+        userInfo(); // sharedpreference로 받은 profile id 에 맞는 정보 출력
+        getFollowers(); //팔로워팔로잉텍스트뷰 세팅
+        getNrPosts(); //전체 포스트 개수 세팅
+
+        if(profileid.equals(user.getUid())){
+            followBtn.setVisibility(View.GONE);
+        }else{
+            checkFollow();
+            fab.setVisibility(View.GONE);
+        }
+
+
+        //팔로우 버튼
+        followBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String btn = followBtn.getText().toString();
+
+                if(btn.equals("+ FOLLOW")){
+                    FirebaseDatabase.getInstance().getReference().child("Follow").child(profileid)
+                            .child("following").child(profileid).setValue(true);
+                    FirebaseDatabase.getInstance().getReference().child("Follow").child(user.getUid())
+                            .child("followers").child(user.getUid()).setValue(true);
+                }else if(btn.equals("FOLLOWING")){
+                    FirebaseDatabase.getInstance().getReference().child("Follow").child(user.getUid())
+                            .child("following").child(profileid).removeValue();
+                    FirebaseDatabase.getInstance().getReference().child("Follow").child(profileid)
+                            .child("followers").child(user.getUid()).removeValue();
+                }
+            }
+        });
+
+
+        //fab button click
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showEditProfileDialog();
+            }
+        });
+
+
+        return view;
+    }
+
+    //shared reference로 받은 profileid에 해당하는 사용자 정보 세팅
+    private void userInfo(){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(profileid);
+
+        reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(getContext()==null){
+                    return;
+                }
 
-                //check until required data get
-                for (DataSnapshot ds : dataSnapshot.getChildren()){
+                ModelUser user = dataSnapshot.getValue(ModelUser.class);
+
+
                     //get data
-                    String name = ""+ds.child("name").getValue();
-                    String email = ""+ds.child("email").getValue();
-                    String field = ""+ds.child("field").getValue();
-                    String image = ""+ds.child("image").getValue();
-                    String cover = ""+ds.child("cover").getValue();
+                    String name = user.getName();
+                    String field = user.getField();
+                    String image = user.getImage();
+                    String cover = user.getCover();
 
                     //set data
                     nameTV.setText(name);
-                    emailTv.setText(email);
+//                    emailTv.setText(email);
                     fieldTv.setText(field);
                     try{
                         //if image is received then set
@@ -211,6 +290,43 @@ public class ProfileFragment extends Fragment {
 
                 }
 
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+
+    private void checkFollow(){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
+                .child("Follow").child(user.getUid()).child("following");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.child(profileid).exists()){
+                    followBtn.setText("FOLLOWING");
+                }else{
+                    followBtn.setText("+ FOLLOW");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void getFollowers(){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
+                .child("Follow").child(profileid).child("followers");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                followers.setText(""+snapshot.getChildrenCount());
             }
 
             @Override
@@ -219,17 +335,48 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        //fab button click
-        fab.setOnClickListener(new View.OnClickListener() {
+        DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference()
+                .child("Follow").child(profileid).child("following");
+        reference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onClick(View v) {
-                showEditProfileDialog();
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                following.setText(""+snapshot.getChildrenCount());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
-
-
-        return view;
     }
+
+    private void getNrPosts(){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int i = 0;
+                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    ModelPost post = snapshot.getValue(ModelPost.class);
+                    String hisUid = ""+ dataSnapshot.child("uid").getValue();
+                    if(hisUid.equals(profileid)){
+                        i++;
+                    }
+                }
+
+                posts.setText(""+i);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+
+
 
 
     // STORAGE PERMISSION

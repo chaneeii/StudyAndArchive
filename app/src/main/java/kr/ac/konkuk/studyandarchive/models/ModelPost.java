@@ -3,13 +3,13 @@ package kr.ac.konkuk.studyandarchive.models;
 public class ModelPost {
     // 포스트 업로드 할때와 같은 name 사용
 
-    String pId, pTitle, pDescription, pImage, pStudyTime, pUrl, pTime, uid, uName, uField, uDp, uEmail;
+    String pId, pTitle, pDescription, pImage, pStudyTime, pUrl, pTime, uid, uName, uField, uDp, uEmail, pUid;
     String pComments, pLikes;
 
     public ModelPost() {
     }
 
-    public ModelPost(String pId, String pTitle, String pDescription, String pImage, String pStudyTime, String pUrl, String pTime, String uid, String uName, String uField, String uDp, String uEmail, String pComments, String pLikes) {
+    public ModelPost(String pId, String pTitle, String pDescription, String pImage, String pStudyTime, String pUrl, String pTime, String uid, String uName, String uField, String uDp, String uEmail, String pUid, String pComments, String pLikes) {
         this.pId = pId;
         this.pTitle = pTitle;
         this.pDescription = pDescription;
@@ -22,10 +22,10 @@ public class ModelPost {
         this.uField = uField;
         this.uDp = uDp;
         this.uEmail = uEmail;
+        this.pUid = pUid;
         this.pComments = pComments;
         this.pLikes = pLikes;
     }
-
 
     public String getpId() {
         return pId;
@@ -121,6 +121,14 @@ public class ModelPost {
 
     public void setuEmail(String uEmail) {
         this.uEmail = uEmail;
+    }
+
+    public String getpUid() {
+        return pUid;
+    }
+
+    public void setpUid(String pUid) {
+        this.pUid = pUid;
     }
 
     public String getpComments() {

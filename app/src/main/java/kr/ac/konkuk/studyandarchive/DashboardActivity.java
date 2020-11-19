@@ -3,9 +3,12 @@ package kr.ac.konkuk.studyandarchive;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,6 +16,7 @@ import android.view.MenuItem;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 
 import kr.ac.konkuk.studyandarchive.fragment.HomeFragment;
 import kr.ac.konkuk.studyandarchive.fragment.NotificationFragment;
@@ -80,11 +84,20 @@ public class DashboardActivity extends AppCompatActivity {
                         case R.id.nav_profile:
                             //profile fragment transaction
                             actionBar.setTitle("Profile"); // actionbar 타이틀 바꾸기
+                            SharedPreferences.Editor editor = getSharedPreferences("PREFS", Context.MODE_PRIVATE).edit();
+                            editor.putString("profileid", FirebaseAuth.getInstance().getCurrentUser().getUid());
+                            editor.apply();
                             ProfileFragment fragment2 = new ProfileFragment();
-                            FragmentTransaction ft2 = getSupportFragmentManager().beginTransaction();
-                            ft2.replace(R.id.container, fragment2, "");
-                            ft2.commit();
+
+                            getSupportFragmentManager().beginTransaction().replace(R.id.container,
+                                    new ProfileFragment()).commit();
+
+//                            FragmentTransaction ft2 = getSupportFragmentManager().beginTransaction();
+//                            ft2.replace(R.id.container, fragment2, "");
+//                            ft2.commit();
+
                             return true;
+
                         case R.id.nav_users:
                             //users fragment transaction
                             actionBar.setTitle("Users"); // actionbar 타이틀 바꾸기
