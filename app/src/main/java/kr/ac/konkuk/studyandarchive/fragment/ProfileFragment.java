@@ -492,7 +492,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // edit text로 부터 text input하기
-                String value = editText.getText().toString().trim();
+                final String value = editText.getText().toString().trim();
                 // 사용자가 인풋을 입ㄺ햇는지 아닌지 체크
                 if(!TextUtils.isEmpty(value)){
                     pd.show();
@@ -517,6 +517,62 @@ public class ProfileFragment extends Fragment {
 
                                 }
                             });
+
+                    //만약 사용자가 이름을 바꾸면, 이것은 과거 포스트에도 변경된 이름을 적용할수있도록 함
+                    if(key.equals("name")){
+                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts");
+                        Query query = ref.orderByChild("uid").equalTo(user.getUid());
+                        query.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                for(DataSnapshot ds : snapshot.getChildren()){
+                                    String child = ds.getKey();
+                                    snapshot.getRef().child(child).child("uName").setValue(value);
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+
+                    }
+                    //만약 사용자가 이름을 바꾸면, 이것은 과거 댓글에도 변경된 이름을 적용할수있도록 함
+                    databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for(DataSnapshot ds : snapshot.getChildren()){
+                                String child = ds.getKey();
+                                if (snapshot.child(child).hasChild("Comments")){
+                                    String child1 = ""+snapshot.child(child).getKey();
+                                    Query child2 = FirebaseDatabase.getInstance().getReference("Posts").child(child1).child("Comments").orderByChild("uid").equalTo(user.getUid());
+                                    child2.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            for (DataSnapshot ds : snapshot.getChildren()){
+                                                String child = ds.getKey();
+                                                snapshot.getRef().child(child).child("uName").setValue(value);
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                        }
+                                    });
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+
+
 
                 }
                 else{

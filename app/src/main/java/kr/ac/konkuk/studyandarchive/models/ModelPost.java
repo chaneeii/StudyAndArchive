@@ -4,11 +4,12 @@ public class ModelPost {
     // 포스트 업로드 할때와 같은 name 사용
 
     String pId, pTitle, pDescription, pImage, pStudyTime, pUrl, pTime, uid, uName, uField, uDp, uEmail;
+    String pComments, pLikes;
 
     public ModelPost() {
     }
 
-    public ModelPost(String pId, String pTitle, String pDescription, String pImage, String pStudyTime, String pUrl, String pTime, String uid, String uName, String uField, String uDp, String uEmail) {
+    public ModelPost(String pId, String pTitle, String pDescription, String pImage, String pStudyTime, String pUrl, String pTime, String uid, String uName, String uField, String uDp, String uEmail, String pComments, String pLikes) {
         this.pId = pId;
         this.pTitle = pTitle;
         this.pDescription = pDescription;
@@ -21,15 +22,10 @@ public class ModelPost {
         this.uField = uField;
         this.uDp = uDp;
         this.uEmail = uEmail;
+        this.pComments = pComments;
+        this.pLikes = pLikes;
     }
 
-    public String getuEmail() {
-        return uEmail;
-    }
-
-    public void setuEmail(String uEmail) {
-        this.uEmail = uEmail;
-    }
 
     public String getpId() {
         return pId;
@@ -117,5 +113,29 @@ public class ModelPost {
 
     public void setuDp(String uDp) {
         this.uDp = uDp;
+    }
+
+    public String getuEmail() {
+        return uEmail;
+    }
+
+    public void setuEmail(String uEmail) {
+        this.uEmail = uEmail;
+    }
+
+    public String getpComments() {
+        return pComments;
+    }
+
+    public void setpComments(String pComments) {
+        this.pComments = pComments;
+    }
+
+    public String getpLikes() {
+        return pLikes;
+    }
+
+    public void setpLikes(String pLikes) {
+        this.pLikes = pLikes;
     }
 }

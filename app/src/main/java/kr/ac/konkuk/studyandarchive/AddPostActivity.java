@@ -184,7 +184,7 @@ public class AddPostActivity extends AppCompatActivity {
                 if (TextUtils.isEmpty(url)){
                     Toast.makeText(AddPostActivity.this, "포스팅 내용을 입력해 주세요", Toast.LENGTH_SHORT).show();
                 }else{
-                    uploadData(studytime,title,description,String.valueOf(image_uri),"No Url");
+                    uploadData(studytime,title,description,String.valueOf(image_uri),url);
                 }
 
 
@@ -255,6 +255,8 @@ public class AddPostActivity extends AppCompatActivity {
                                             image_uri=null;
                                             linkEt.setText("");
                                             timeView.setText("");
+
+                                            finish();
                                         }
                                     })
                                     .addOnFailureListener(new OnFailureListener() {

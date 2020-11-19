@@ -4,7 +4,9 @@
     <color name="colorPrimaryDark">#7B68EE</color>
     <color name="colorAccent">#40E0D0</color>
     <color name="colorGray">#787878</color>
+    <color name="colorBlack">#000000</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="chipColor">#F2F2F2</color>
     <color name="chipYellow">#fff44f</color>
+    <color name="fire">#FF441A</color>
 </resources>

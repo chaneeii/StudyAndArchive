@@ -1,6 +1,8 @@
 package kr.ac.konkuk.studyandarchive.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,14 +12,17 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import kr.ac.konkuk.studyandarchive.PostDetailActivity;
 import kr.ac.konkuk.studyandarchive.R;
 import kr.ac.konkuk.studyandarchive.models.ModelPost;
 
@@ -28,9 +33,17 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
     Context context;
     List<ModelPost> postList;
 
+    // LIKES 디비 node
+    private DatabaseReference likeRef;
+    private DatabaseReference postRef; //post reference
+
+    boolean mProcessLike = false;
+
     public AdapterPosts(Context context, List<ModelPost> postList) {
         this.context = context;
         this.postList = postList;
+        likeRef = FirebaseDatabase.getInstance().getReference().child("Likes");
+        postRef = FirebaseDatabase.getInstance().getReference().child("Posts");
     }
 
     // view holder class
@@ -72,21 +85,22 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         String uName = postList.get(i).getuName();
         String uField = postList.get(i).getuField();
         String uDp = postList.get(i).getuDp();
-        String pId = postList.get(i).getpId();
+        final String pId = postList.get(i).getpId();
         String pDescription = postList.get(i).getpDescription();
         String pTitle = postList.get(i).getpTitle();
         String pImage = postList.get(i).getpImage();
         String pStudyTime = postList.get(i).getpStudyTime();
         String pTimeStamp = postList.get(i).getpTime();
         String pUrl = postList.get(i).getpUrl();
+        String pComments = postList.get(i).getpComments();
+        String pLikes = postList.get(i).getpLikes();
+
+
 
         //timestamp 변환 yyyy/mm/dd hh:mm am/pm
 //        Calendar calendar = Calendar.getInstance(Locale.getDefault());
 //        calendar.setTimeInMillis(Long.parseLong(pTimeStamp));
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd hh:mm aa");
-////        String pTime = DateFormat.format("yyyy/MM/dd hh:mm aa", calendar).toString();
-//        String formattedDate = dateFormat.format(calendar).toString();
-
+//        String pTime = DateFormat.format("yyyy/MM/dd hh:mm aa", calendar).toString();
 
         Long time = Long.parseLong(pStudyTime);
 
@@ -101,6 +115,8 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         myHolder.pStudyTime.setText(pStudyTime_s);
         myHolder.pTitleTv.setText(pTitle);
         myHolder.uFieldTv.setText(uField);
+
+
         //포스트 이미지 설정
         try{
             Picasso.get().load(pImage).placeholder(R.drawable.test_image).into(myHolder.pImageIv);
@@ -120,7 +136,10 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         myHolder.pImageIv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 이미지 선택하면
+                // 이미지 선택하면 포스트 상세 페이지 postdetail activity
+                Intent intent = new Intent(context, PostDetailActivity.class);
+                intent.putExtra("postId",pId); // 해당 포스트가 클릭될때 해당 id로 포스트 디테일을 가져옴
+                context.startActivity(intent);
             }
         });
 
