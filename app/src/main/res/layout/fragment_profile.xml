@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorWhite"
-    tools:context=".ProfileFragment">
+    tools:context=".fragment.ProfileFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -21,7 +21,6 @@
                 android:layout_height="180dp"
                 android:scaleType="fitXY"
                 android:background="@color/colorPrimary">
-
             </ImageView>
 
             <LinearLayout

@@ -413,7 +413,7 @@ public class AddPostActivity extends AppCompatActivity {
         }else{
             //user not signed in, go to main activity
             // 로그인이 안되있다면, 메인으로이동해서 로그인. 회원가입 둘중하게하도록
-            startActivity(new Intent(this, MainActivity.class));
+            startActivity(new Intent(this, StartActivity.class));
             finish();
         }
 

@@ -1,4 +1,4 @@
-package kr.ac.konkuk.studyandarchive;
+package kr.ac.konkuk.studyandarchive.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,6 +20,9 @@ import android.widget.Chronometer;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.text.SimpleDateFormat;
+
+import kr.ac.konkuk.studyandarchive.AddPostActivity;
+import kr.ac.konkuk.studyandarchive.R;
 
 import static android.service.controls.ControlsProviderService.TAG;
 

@@ -64,5 +64,7 @@ dependencies {
     //material
     implementation 'com.google.android.material:material:1.2.1'
 
+    //like button
+    implementation 'com.github.jd-alexander:LikeButton:0.2.3'
 
 }

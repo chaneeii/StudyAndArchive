@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity {
+public class StartActivity extends AppCompatActivity {
 
     //views
     Button mRegisterBtn, mLoginBtn;
@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //start Register activity
-                startActivity(new Intent(MainActivity.this, RegisterActivity.class));
+                startActivity(new Intent(StartActivity.this, RegisterActivity.class));
 
             }
         });
@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //start LoginActivity
-                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                startActivity(new Intent(StartActivity.this, LoginActivity.class));
             }
         });
 
