@@ -1,6 +1,7 @@
 package kr.ac.konkuk.studyandarchive.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -101,6 +102,9 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder>{
                 SharedPreferences.Editor editor =context.getSharedPreferences("PREFS", Context.MODE_PRIVATE).edit();
                 editor.putString("profileid", user.getUid());
                 editor.apply();
+
+//                Intent intent=new Intent(context,ProfileFragment.class);
+//                intent.putExtra("uid",user.getUid());
 
                 ((FragmentActivity)context).getSupportFragmentManager().beginTransaction().replace(R.id.container,
                         new ProfileFragment()).commit();

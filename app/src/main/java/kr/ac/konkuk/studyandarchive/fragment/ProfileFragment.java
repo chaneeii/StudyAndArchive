@@ -776,6 +776,7 @@ public class ProfileFragment extends Fragment {
         //inflating menu
 
         inflater.inflate(R.menu.menu_main, menu);
+        menu.findItem(R.id.action_search).setVisible(false);
         super.onCreateOptionsMenu(menu, inflater);
 
     }

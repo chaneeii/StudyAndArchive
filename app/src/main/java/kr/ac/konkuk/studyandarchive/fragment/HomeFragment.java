@@ -5,10 +5,12 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -142,6 +145,75 @@ public class HomeFragment extends Fragment {
     }
 
 
+    private void loadPosts_all() {
+        // path of 모든 포스트
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts");
+        //ref애서 데이터 가져오기
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                postList.clear();
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    ModelPost post =snapshot.getValue(ModelPost.class);
+
+                            postList.add(post);
+                            Log.d(TAG, "onDataChange: "+post);
+
+                            //어댑터
+                            adapterPosts = new AdapterPosts(getContext(), postList);
+                            //리사이클러뷰
+                            recyclerView.setAdapter(adapterPosts);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                //에러난 경우
+//                Toast.makeText(getActivity(), ""+error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+
+
+    private  void searchPosts(final String searchQuery){
+        // path of 모든 포스트
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts");
+        //ref애서 데이터 가져오기
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                postList.clear();
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    ModelPost post =snapshot.getValue(ModelPost.class);
+
+                    if(!post.getpTitle().toLowerCase().contains(searchQuery.toLowerCase()) ||
+                            post.getpDescription().toLowerCase().contains(searchQuery.toLowerCase())){
+                        postList.add(post);
+                    }
+
+                    postList.add(post);
+                    Log.d(TAG, "onDataChange: "+post);
+
+                    //어댑터
+                    adapterPosts = new AdapterPosts(getContext(), postList);
+                    //리사이클러뷰
+                    recyclerView.setAdapter(adapterPosts);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                //에러난 경우
+                Toast.makeText(getActivity(), ""+error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+
+    }
+
     private  void checkUserStatus(){
 
         //get current user
@@ -172,9 +244,42 @@ public class HomeFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
         menu.clear();
-
         //inflating menu
         inflater.inflate(R.menu.menu_main, menu);
+
+        //search view title이랑 description으로 검색가능
+        MenuItem item = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+
+        //search listener
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                //사용자가 search buttton 누르면 호출됨
+                if(!TextUtils.isEmpty(s)){
+                    searchPosts(s);
+                }
+                else {
+                    checkFollowing();
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                //사용자가 아무글자나 누르면 호출됨
+                if(!TextUtils.isEmpty(s)){
+                    searchPosts(s);
+                }
+                else {
+                    checkFollowing();
+                }
+                return false;
+            }
+        });
+
+
+
         super.onCreateOptionsMenu(menu, inflater);
 
     }
