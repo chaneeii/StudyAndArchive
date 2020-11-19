@@ -3,6 +3,8 @@ package kr.ac.konkuk.studyandarchive;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -37,14 +39,19 @@ import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+
+import kr.ac.konkuk.studyandarchive.adapters.AdapterComments;
+import kr.ac.konkuk.studyandarchive.models.ModelComment;
 
 public class PostDetailActivity extends AppCompatActivity {
 
     // user 와 post의 detial 가져오기 위함
-    String myUid, myEmail, myName, myDp,
+    String myUid, myEmail, myName, myDp, myField,
     postId, pLikes, hisDp, hisName, hisField,hisUid,
     pImage;
 
@@ -62,6 +69,10 @@ public class PostDetailActivity extends AppCompatActivity {
     ImageButton moreBtn;
     Button likeBtn, commentBtn;
     LinearLayout profileLayout;
+    RecyclerView recyclerView;
+
+    List<ModelComment> commentList;
+    AdapterComments adapterComments;
 
 
     // add comments views
@@ -104,6 +115,7 @@ public class PostDetailActivity extends AppCompatActivity {
         likeBtn = findViewById(R.id.likeBtn);
         commentBtn = findViewById(R.id.commentBtn);
         profileLayout = findViewById(R.id.profileLayout);
+        recyclerView = findViewById(R.id.recyclerView);
 
 
         commentEt = findViewById(R.id.commentEt);
@@ -117,6 +129,9 @@ public class PostDetailActivity extends AppCompatActivity {
         loadUserInfo();
 
         setLikes();
+
+        loadComments();
+
 
 
         //send comment 보내기 버튼 클릭
@@ -141,6 +156,46 @@ public class PostDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showMoreOptions();
+            }
+        });
+
+
+
+    }
+
+    private void loadComments() {
+        //layout(Linear) for recyclerview
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        //set layout to recycler view
+        recyclerView.setLayoutManager(layoutManager);
+
+
+        //init comments lists
+        commentList = new ArrayList<>();
+
+        //path of the post, to get it's comments
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts").child(postId).child("Comments");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                commentList.clear();
+                for(DataSnapshot ds : snapshot.getChildren()){
+                    ModelComment modelComment = ds.getValue(ModelComment.class);
+
+                    commentList.add(modelComment);
+
+                    //setup adapter
+                    adapterComments = new AdapterComments(getApplicationContext(), commentList);
+                    //set adapter
+                    recyclerView.setAdapter(adapterComments);
+
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
 
@@ -256,15 +311,18 @@ public class PostDetailActivity extends AppCompatActivity {
                 if(snapshot.child(postId).hasChild(myUid)){
                     //사용자가 좋아요를 누르면
                     //ui도 적용
-                        likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_fire,0,0,0);
+                    likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_fire_red,0,0,0);
+
+                }else{
+                    //좋아요 한번더 눌러서 안좋아하면면
+                    //ui도 적용
+                    likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_fire,0,0,0);
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                //좋아요 한번더 눌러서 안좋아하면면
-               //ui도 적용
-                        likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_fire_red,0,0,0);
+
             }
         });
 
@@ -285,6 +343,7 @@ public class PostDetailActivity extends AppCompatActivity {
                         postRef.child(postId).child("pLikes").setValue(""+(Integer.parseInt(pLikes)-1)); //개수삭제
                         likeRef.child(postId).child(myUid).removeValue();
                         mProcessLike = false;
+
 
                     }else {
                         //좋아요를 누르지않았다면, 좋아요표기하기
@@ -333,6 +392,7 @@ public class PostDetailActivity extends AppCompatActivity {
         hashMap.put("uEmail",myEmail);
         hashMap.put("uDp",myDp);
         hashMap.put("uName",myName);
+        hashMap.put("uField",myField);
 
         // db에 해시맵 데이터 넣기
         ref.child(timeStamp).setValue(hashMap)
@@ -393,6 +453,7 @@ public class PostDetailActivity extends AppCompatActivity {
                 for(DataSnapshot ds : snapshot.getChildren()){
                     myName = ""+ds.child("name").getValue();
                     myDp = ""+ds.child("image").getValue();
+                    myField = ""+ds.child("field").getValue();
 
                     //setdata
                     try{
@@ -434,7 +495,7 @@ public class PostDetailActivity extends AppCompatActivity {
                     String commentCount =  ""+ds.child("pComments").getValue();
 
 
-//                    pLikes = ""+ds.child("pLikes").getValue();
+                    pLikes = ""+ds.child("pLikes").getValue();
                     hisDp = "" + ds.child("uDp").getValue();
                     hisName = ""+ds.child("uName").getValue();
                     hisField = ""+ds.child("uField").getValue();
@@ -459,7 +520,7 @@ public class PostDetailActivity extends AppCompatActivity {
                     pTimeTv.setText(pTime);
                     pDescriptionTv.setText(pDescription);
                     pLinkTv.setText(pLink);
-//                    pLikesTv.setText(pLikes+" Fires");
+                    pLikesTv.setText(pLikes+" Fires");
                     uNameTv.setText(hisName);
                     uFieldTv.setText(hisField);
                     pCommentsTv.setText(commentCount+" Comments");

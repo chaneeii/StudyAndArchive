@@ -8,6 +8,7 @@
     tools:context=".PostDetailActivity">
 
     <androidx.core.widget.NestedScrollView
+        android:layout_above="@+id/commentsLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -156,13 +157,13 @@
                         android:gravity="center">
                         <Button
                             android:id="@+id/likeBtn"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="FIRE"
                             android:drawableLeft="@drawable/ic_fire"
-                            android:paddingLeft="20dp"
-                            android:drawablePadding="0dp"
+                            android:paddingLeft="16dp"
+                            android:drawablePadding="-25dp"
                             android:background="@null"/>
                         <View
                             android:layout_width="1dp"
@@ -170,7 +171,7 @@
                             android:background="#F5F5F0"/>
                         <Button
                             android:id="@+id/commentBtn"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="COMMENT"
@@ -207,20 +208,29 @@
                     android:layout_marginBottom="5dp"/>
             </LinearLayout>
 
+            <!--Comment List-->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                />
+
+
+
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
 
     <RelativeLayout
+        android:id="@+id/commentsLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorWhite">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#F5F5F0"/>
 
         <com.blogspot.atifsoftwares.circularimageview.CircularImageView
             android:layout_width="50dp"
