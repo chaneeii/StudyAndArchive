@@ -1,4 +1,4 @@
-package kr.ac.konkuk.studyandarchive;
+package kr.ac.konkuk.studyandarchive.models;
 
 public class ModelUser {
 

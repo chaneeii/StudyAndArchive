@@ -9,19 +9,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.squareup.picasso.Picasso;
+
+import kr.ac.konkuk.studyandarchive.fragment.HomeFragment;
+import kr.ac.konkuk.studyandarchive.fragment.NotificationFragment;
+import kr.ac.konkuk.studyandarchive.fragment.ProfileFragment;
+import kr.ac.konkuk.studyandarchive.fragment.RecordFragment;
+import kr.ac.konkuk.studyandarchive.fragment.UsersFragment;
 
 public class DashboardActivity extends AppCompatActivity {
 
@@ -104,6 +101,14 @@ public class DashboardActivity extends AppCompatActivity {
                             ft4.replace(R.id.container, fragment4, "");
                             ft4.commit();
                             return true;
+                        case R.id.nav_notification:
+                            //users fragment transaction
+                            actionBar.setTitle("Notification"); // actionbar 타이틀 바꾸기
+                            NotificationFragment fragment5 = new NotificationFragment();
+                            FragmentTransaction ft5 = getSupportFragmentManager().beginTransaction();
+                            ft5.replace(R.id.container, fragment5, "");
+                            ft5.commit();
+                            return true;
                     }
 
                     return false;
@@ -124,7 +129,7 @@ public class DashboardActivity extends AppCompatActivity {
         }else{
             //user not signed in, go to main activity
             // 로그인이 안되있다면, 메인으로이동해서 로그인. 회원가입 둘중하게하도록
-            startActivity(new Intent(DashboardActivity.this, MainActivity.class));
+            startActivity(new Intent(DashboardActivity.this, StartActivity.class));
             finish();
         }
 
