@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -68,6 +69,7 @@ import kr.ac.konkuk.studyandarchive.models.ModelPost;
 import kr.ac.konkuk.studyandarchive.models.ModelUser;
 
 import static android.app.Activity.RESULT_OK;
+import static android.content.ContentValues.TAG;
 
 
 public class ProfileFragment extends Fragment {
@@ -174,6 +176,7 @@ public class ProfileFragment extends Fragment {
         adapterThumbs = new AdapterThumbs(getContext(),postList);
         recyclerView.setAdapter(adapterThumbs);
 
+        Log.d(TAG, "누가주인? "+profileid);
 
 
 
@@ -229,7 +232,7 @@ public class ProfileFragment extends Fragment {
 
         userInfo(); // sharedpreference로 받은 profile id 에 맞는 정보 출력
         getFollowers(); //팔로워팔로잉텍스트뷰 세팅
-        getNrPosts(); //전체 포스트 개수 세팅
+//        getNrPosts(); //전체 포스트 개수 세팅
         myThumbs();
 
 
@@ -247,17 +250,18 @@ public class ProfileFragment extends Fragment {
             public void onClick(View v) {
                 String btn = followBtn.getText().toString();
 
-                if(btn.equals("+ FOLLOW")){
-                    FirebaseDatabase.getInstance().getReference().child("Follow").child(profileid)
-                            .child("following").child(profileid).setValue(true);
+                if(btn.equals("follow")){
                     FirebaseDatabase.getInstance().getReference().child("Follow").child(user.getUid())
+                            .child("following").child(profileid).setValue(true);
+                    FirebaseDatabase.getInstance().getReference().child("Follow").child(profileid)
                             .child("followers").child(user.getUid()).setValue(true);
-                }else if(btn.equals("FOLLOWING")){
+                }else if(btn.equals("following")){
                     FirebaseDatabase.getInstance().getReference().child("Follow").child(user.getUid())
                             .child("following").child(profileid).removeValue();
                     FirebaseDatabase.getInstance().getReference().child("Follow").child(profileid)
                             .child("followers").child(user.getUid()).removeValue();
                 }
+
             }
         });
 
@@ -274,6 +278,26 @@ public class ProfileFragment extends Fragment {
         return view;
     }
 
+
+    private void isFollowing(final String userid, final Button button){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
+                .child("Follow").child(user.getUid()).child("following");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.child(userid).exists()){
+                    button.setText("FOLLOWING");
+                }else{
+                    button.setText("+ FOLLOW");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 
 
     //shared reference로 받은 profileid에 해당하는 사용자 정보 세팅
@@ -335,9 +359,9 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.child(profileid).exists()){
-                    followBtn.setText("FOLLOWING");
+                    followBtn.setText("following");
                 }else{
-                    followBtn.setText("+ FOLLOW");
+                    followBtn.setText("follow");
                 }
             }
 
@@ -349,6 +373,8 @@ public class ProfileFragment extends Fragment {
     }
 
     private void getFollowers(){
+
+        Log.d(TAG, "getFollowers: "+profileid);
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
                 .child("Follow").child(profileid).child("followers");
         reference.addValueEventListener(new ValueEventListener() {
@@ -365,7 +391,7 @@ public class ProfileFragment extends Fragment {
 
         DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference()
                 .child("Follow").child(profileid).child("following");
-        reference.addValueEventListener(new ValueEventListener() {
+        reference1.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 following.setText(""+snapshot.getChildrenCount());
@@ -378,32 +404,31 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    private void getNrPosts(){
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                int i = 0;
-                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
-                    ModelPost post = snapshot.getValue(ModelPost.class);
-//                    String currentUid = post.getpUid();
-                    hisUid = ""+ dataSnapshot.child("uid").getValue();
-
-                    if(hisUid.equals(profileid)){
-                        i++;
-                    }
-                }
-
-                posts.setText(""+i);
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
+//    private void getNrPosts(){
+//        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts");
+//        reference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                int i = 0;
+//                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+//                    ModelPost post = snapshot.getValue(ModelPost.class);
+////                    String currentUid = post.getpUid();
+////                    hisUid = ""+ dataSnapshot.child("uid").getValue();
+//                    if(post.getUid().equals(profileid)){
+//                        i++;
+//                    }
+//                }
+//
+//                posts.setText(""+i);
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+//    }
 
     private void myThumbs(){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts");
@@ -411,15 +436,18 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 postList.clear();
+                int i = 0;
                 for(DataSnapshot snapshot : dataSnapshot.getChildren() ){
                     ModelPost post = snapshot.getValue(ModelPost.class);
 //                    String hisUid = ""+ dataSnapshot.child("uid").getValue();
                     if(post.getUid().equals(profileid)){
                         postList.add(post);
+                        i++;
                     }
                 }
                 Collections.reverse(postList);
                 adapterThumbs.notifyDataSetChanged();
+                posts.setText(""+i);
             }
 
             @Override
