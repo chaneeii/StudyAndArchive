@@ -68,6 +68,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
+        <!--url -->
+        <EditText
+            android:id="@+id/pLinkEt"
+            android:hint="Enter Url"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
         <!--Button-->
         <Button
             android:id="@+id/pArchiveBtn"

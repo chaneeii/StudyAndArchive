@@ -611,7 +611,7 @@ public class ProfileFragment extends Fragment {
             }
             break;
         }
-        
+
 //        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
@@ -771,6 +771,7 @@ public class ProfileFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         //inflating menu
+
         inflater.inflate(R.menu.menu_main, menu);
         super.onCreateOptionsMenu(menu, inflater);
 
