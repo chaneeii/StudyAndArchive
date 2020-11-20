@@ -60,15 +60,15 @@ public class RecordFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_record, container, false);
 
 
-        // assign variable
+        // view init!
         chronometer = view.findViewById(R.id.chronometer);
         btnStart =view.findViewById(R.id.bt_start);
         btnPause =view.findViewById(R.id.bt_pause);
         btnReset =view.findViewById(R.id.bt_reset);
         btnFinish = view.findViewById(R.id.bt_finish);
 
-        //Initialize simple date format
-        //Get current time
+        //simple date format 초기화
+        //현재시간 얻기
         format = new SimpleDateFormat("hh:mm:ss aa");
 
         btnStart.setOnClickListener(new View.OnClickListener() {
@@ -117,11 +117,12 @@ public class RecordFragment extends Fragment {
                 String t = (h < 10 ? "0"+h: h)+":"+(m < 10 ? "0"+m: m)+":"+ (s < 10 ? "0"+s: s);
                 myIntent.putExtra("study_time", t);
                 myIntent.putExtra("study_time_long",time);
-                Log.d(TAG, "찬희다"+ t);
-                Log.d(TAG, "찬희다"+ time);
-                Log.d(TAG, "찬희다"+ elapsed);
-
                 startActivity(myIntent);
+
+                //view 초기화! 클리어!
+                chronometer.setBase(SystemClock.elapsedRealtime());
+                pauseOffset=0;
+
             }
         });
 

@@ -36,7 +36,6 @@ public class AdapterThumbs extends RecyclerView.Adapter<AdapterThumbs.MyHolder> 
     @Override
     public MyHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_thumbs, viewGroup, false);
-
         return new AdapterThumbs.MyHolder(view);
     }
 

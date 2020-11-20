@@ -283,6 +283,7 @@ public class ProfileFragment extends Fragment {
                 intent.putExtra("id",profileid);
                 intent.putExtra("title","followers");
                 startActivity(intent);
+                addNotifications();
             }
         });
 
@@ -293,6 +294,7 @@ public class ProfileFragment extends Fragment {
                 intent.putExtra("id",profileid);
                 intent.putExtra("title","following");
                 startActivity(intent);
+                addNotifications();
             }
         });
 
@@ -320,6 +322,21 @@ public class ProfileFragment extends Fragment {
             }
         });
     }
+
+
+    //알림
+    private void addNotifications(){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Notifications").child(profileid);
+
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("userid", user.getUid() );
+        hashMap.put("text", "님이 회원님을 팔로우합니다.");
+        hashMap.put("postid","");
+        hashMap.put("ispost",false);
+
+        reference.push().setValue(hashMap);
+    }
+
 
 
     //shared reference로 받은 profileid에 해당하는 사용자 정보 세팅

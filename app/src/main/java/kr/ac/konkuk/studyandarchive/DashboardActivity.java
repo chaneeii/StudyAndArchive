@@ -139,13 +139,11 @@ public class DashboardActivity extends AppCompatActivity {
 
     private  void checkUserStatus(){
 
-        //get current user
         FirebaseUser user = firebaseAuth.getCurrentUser();
 
         if(user !=null){
             //user is signed in stay here
             // 만약 로그인 되어있다면 홈보여주기
-
 
         }else{
             //user not signed in, go to main activity
@@ -166,8 +164,24 @@ public class DashboardActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         //check on start of app 시작시
-        checkUserStatus(); //사용자 로그인 상태 체크
+//        checkUserStatus(); //사용자 로그인 상태 체크
+        //get current user
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+
+        if(user !=null){
+            //user is signed in stay here
+            // 만약 로그인 되어있다면 홈보여주기
+
+
+        }else{
+            //user not signed in, go to main activity
+            // 로그인이 안되있다면, 메인으로이동해서 로그인. 회원가입 둘중하게하도록
+            startActivity(new Intent(DashboardActivity.this, StartActivity.class));
+            finish();
+        }
+
         super.onStart();
+
     }
 
 

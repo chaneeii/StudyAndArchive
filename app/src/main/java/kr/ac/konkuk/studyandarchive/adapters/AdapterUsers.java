@@ -28,6 +28,7 @@ import com.google.firebase.firestore.auth.User;
 import com.squareup.picasso.Picasso;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import kr.ac.konkuk.studyandarchive.DashboardActivity;
@@ -126,6 +127,7 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder>{
                             .child("following").child(user.getUid()).setValue(true);
                     FirebaseDatabase.getInstance().getReference().child("Follow").child(user.getUid())
                             .child("followers").child(firebaseUser.getUid()).setValue(true);
+                    addNotifications(user.getUid());
                 }else{
                     FirebaseDatabase.getInstance().getReference().child("Follow").child(firebaseUser.getUid())
                             .child("following").child(user.getUid()).removeValue();
@@ -143,6 +145,20 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder>{
 
 
 
+    }
+
+    //알림
+    private void addNotifications(String userid){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Notifications").child(userid);
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("userid", firebaseUser.getUid() );
+        hashMap.put("text", "님이 사용자님을 팔로우하기 시작했습니다.");
+        hashMap.put("postid","");
+        hashMap.put("ispost",false);
+
+        reference.push().setValue(hashMap);
     }
 
     @Override

@@ -86,6 +86,8 @@ public class PostDetailActivity extends AppCompatActivity {
     ImageButton sendBtn;
     ImageView cAvatarIv;
 
+    FirebaseUser firebaseUser;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +99,9 @@ public class PostDetailActivity extends AppCompatActivity {
         actiionBar.setTitle("study&archive");
         actiionBar.setDisplayShowHomeEnabled(true);
         actiionBar.setDisplayHomeAsUpEnabled(true);
+
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
 
         //intent를 (postid)이용해서 post id 가져오기
         // 이미지 선택하면 포스트 상세 페이지 postdetail activity
@@ -154,6 +159,7 @@ public class PostDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 likePost();
+
             }
         });
 
@@ -194,6 +200,35 @@ public class PostDetailActivity extends AppCompatActivity {
 
 
     }
+
+
+    //알림 - 좋아요
+    private void addNotifications(String userid, String postid){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Notifications").child(userid);
+
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("userid", firebaseUser.getUid());
+        hashMap.put("text", "님이 이 게시글을 좋아합니다.");
+        hashMap.put("postid",postid);
+        hashMap.put("ispost",true);
+
+        reference.push().setValue(hashMap);
+    }
+
+    //알림 - 댓글
+    private void addNotifications(){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Notifications").child(hisUid);
+
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("userid", firebaseUser.getUid() );
+        hashMap.put("text", "님이 이 게시글에 댓글을 남겼습니다");
+        hashMap.put("postid",postId);
+        hashMap.put("ispost",true);
+
+        reference.push().setValue(hashMap);
+    }
+
+
 
     private void loadComments() {
         //layout(Linear) for 리사이클러뷰
@@ -391,6 +426,9 @@ public class PostDetailActivity extends AppCompatActivity {
                         likeRef.child(postId).child(myUid).setValue("Liked"); // 아무 밸류나 설정해도됨.
                         mProcessLike = false;
 
+                        //알림
+                        addNotifications(hisUid, postId);
+
                     }
                 }
             }
@@ -444,6 +482,7 @@ public class PostDetailActivity extends AppCompatActivity {
                         Toast.makeText(PostDetailActivity.this, "성공적으로 댓글이 추가되었습니다.", Toast.LENGTH_SHORT).show();
                         commentEt.setText("");
                         updateCommentCount();
+                        addNotifications();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
