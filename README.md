@@ -46,6 +46,10 @@ Android Social Media App for Sharing Study-Time <br>
 - Home <br>
 ![image](https://user-images.githubusercontent.com/63157395/99914390-835d0380-2d40-11eb-8aeb-ac0ada6d8a10.png)<br>
 
+- Post Details<br>
+![image](https://user-images.githubusercontent.com/63157395/99914584-adfb8c00-2d41-11eb-8f53-4e1d6b38b615.png) <br>
+
+
 - User <br>
 ![image](https://user-images.githubusercontent.com/63157395/99914458-ddf65f80-2d40-11eb-8706-cd6ddf33d7f2.png)<br>
 
