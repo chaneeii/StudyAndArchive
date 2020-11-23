@@ -326,15 +326,18 @@ public class ProfileFragment extends Fragment {
 
     //알림
     private void addNotifications(){
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Notifications").child(profileid);
+        if( profileid != user.getUid()){
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Notifications").child(profileid);
 
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("userid", user.getUid() );
-        hashMap.put("text", "님이 회원님을 팔로우합니다.");
-        hashMap.put("postid","");
-        hashMap.put("ispost",false);
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("userid", user.getUid() );
+            hashMap.put("text", "님이 사용자님을 팔로우하기 시작했습니다.");
+            hashMap.put("postid","");
+            hashMap.put("ispost",false);
 
-        reference.push().setValue(hashMap);
+            reference.push().setValue(hashMap);
+        }
+
     }
 
 
@@ -1100,6 +1103,7 @@ public class ProfileFragment extends Fragment {
 
 
         inflater.inflate(R.menu.menu_main, menu);
+        menu.findItem(R.id.action_logout).setVisible(true);
         menu.findItem(R.id.action_search).setVisible(false);
         super.onCreateOptionsMenu(menu, inflater);
 

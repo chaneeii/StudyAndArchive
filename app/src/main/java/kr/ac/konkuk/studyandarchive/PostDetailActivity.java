@@ -16,6 +16,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -56,6 +57,7 @@ import kr.ac.konkuk.studyandarchive.models.ModelComment;
 
 public class PostDetailActivity extends AppCompatActivity {
 
+    private static final String TAG = "postdetail";
     // user 와 post의 detial 가져오기 위함
     String myUid, myEmail, myName, myDp, myField,
     postId, pLikes, hisDp, hisName, hisField,hisUid,
@@ -144,6 +146,14 @@ public class PostDetailActivity extends AppCompatActivity {
         loadComments();
 
 
+//        if(! hisUid.equals(firebaseUser.getUid())){
+////            moreBtn.setVisibility(View.GONE);
+//            Log.d(TAG, "onCreate: 내포스트");
+//        }else{
+//            Log.d(TAG, "onCreate: 이포스트 내꺼아님");
+//        }
+
+
 
         //send comment 보내기 버튼 클릭
         sendBtn.setOnClickListener(new View.OnClickListener() {
@@ -167,6 +177,7 @@ public class PostDetailActivity extends AppCompatActivity {
         moreBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG, "onClick: 더보기 버튼 눌린다");
                 showMoreOptions();
             }
         });
@@ -204,28 +215,44 @@ public class PostDetailActivity extends AppCompatActivity {
 
     //알림 - 좋아요
     private void addNotifications(String userid, String postid){
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Notifications").child(userid);
 
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("userid", firebaseUser.getUid());
-        hashMap.put("text", "님이 이 게시글을 좋아합니다.");
-        hashMap.put("postid",postid);
-        hashMap.put("ispost",true);
+        if( ! hisUid.equals(firebaseUser.getUid()) ) {
+            Log.d(TAG, "게시글 주인아니디 " + userid);
+            Log.d(TAG, "로그인된 사용ㅇ자" + firebaseUser.getUid());
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Notifications").child(userid);
 
-        reference.push().setValue(hashMap);
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("userid", firebaseUser.getUid());
+            hashMap.put("text", "님이 이 게시글을 좋아합니다.");
+            hashMap.put("postid", postid);
+            hashMap.put("ispost", true);
+
+            reference.push().setValue(hashMap);
+        }else{
+            Log.d(TAG, "게시글 주인아니디 "+hisUid);
+            Log.d(TAG, "로그인된 사용ㅇ자" + firebaseUser.getUid());
+        }
+
     }
 
     //알림 - 댓글
     private void addNotifications(){
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Notifications").child(hisUid);
 
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("userid", firebaseUser.getUid() );
-        hashMap.put("text", "님이 이 게시글에 댓글을 남겼습니다");
-        hashMap.put("postid",postId);
-        hashMap.put("ispost",true);
+        if( ! hisUid.equals(firebaseUser.getUid())){
+            Log.d(TAG, "게시글 주인아니디 " + hisUid);
+            Log.d(TAG, "로그인된 사용자" + firebaseUser.getUid());
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Notifications").child(hisUid);
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("userid", firebaseUser.getUid() );
+            hashMap.put("text", "님이 이 게시글에 댓글을 남겼습니다");
+            hashMap.put("postid",postId);
+            hashMap.put("ispost",true);
+            reference.push().setValue(hashMap);
+        }else{
+            Log.d(TAG, "게시글 주인아니디 "+hisUid);
+            Log.d(TAG, "로그인된 사용자" + firebaseUser.getUid());
+        }
 
-        reference.push().setValue(hashMap);
     }
 
 
@@ -276,10 +303,11 @@ public class PostDetailActivity extends AppCompatActivity {
     }
 
     private void showMoreOptions() {
+
+
         //pop 메뉴 생성
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-            PopupMenu popupMenu =  new PopupMenu(this, moreBtn, Gravity.END);
-
+            PopupMenu popupMenu = new PopupMenu(this, moreBtn, Gravity.END);
             //delete/edit 옵션 (현재 로그인된 사용자의 게시글의 경우)
             if(hisUid.equals(myUid)){
                 //add items in menu
@@ -309,10 +337,6 @@ public class PostDetailActivity extends AppCompatActivity {
                     return false;
                 }
             });
-
-
-
-
 
 
         }else{

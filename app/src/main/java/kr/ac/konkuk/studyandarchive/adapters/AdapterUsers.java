@@ -149,16 +149,20 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder>{
 
     //알림
     private void addNotifications(String userid){
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Notifications").child(userid);
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("userid", firebaseUser.getUid() );
-        hashMap.put("text", "님이 사용자님을 팔로우하기 시작했습니다.");
-        hashMap.put("postid","");
-        hashMap.put("ispost",false);
+        if( userid != firebaseUser.getUid()){
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Notifications").child(userid);
+            FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        reference.push().setValue(hashMap);
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("userid", firebaseUser.getUid() );
+            hashMap.put("text", "님이 사용자님을 팔로우하기 시작했습니다.");
+            hashMap.put("postid","");
+            hashMap.put("ispost",false);
+
+            reference.push().setValue(hashMap);
+        }
+
     }
 
     @Override

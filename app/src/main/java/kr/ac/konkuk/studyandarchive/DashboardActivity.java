@@ -52,7 +52,10 @@ public class DashboardActivity extends AppCompatActivity {
         //Actionbar and its title
         actionBar = getSupportActionBar();
         actionBar.setTitle("Profile");
-
+//        getSupportActionBar().setDisplayShowTitleEnabled(false); // 기본 타이틀 사용 안함
+//        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM); // 커스텀 사용
+//        getSupportActionBar().setCustomView(R.layout.actionbar_custom); // 커스텀 사용할 파일 위치
+//        setTitle("Profile");
 
         //bottom naviation
         BottomNavigationView navigationView = findViewById(R.id.navigation);
@@ -60,7 +63,8 @@ public class DashboardActivity extends AppCompatActivity {
 
 
         //home fragment transaction (default, on start)
-        actionBar.setTitle("Home"); // actionbar 타이틀 바꾸기
+//        actionBar.setTitle("study&archive"); // actionbar 타이틀 바꾸기
+        actionBar.setTitle("study&archive");
         HomeFragment fragment1 = new HomeFragment();
         FragmentTransaction ft1 = getSupportFragmentManager().beginTransaction();
         ft1.replace(R.id.container, fragment1, "");
@@ -80,7 +84,7 @@ public class DashboardActivity extends AppCompatActivity {
                     switch (menuItem.getItemId()){
                         case R.id.nav_home:
                             //home fragment transaction
-                            actionBar.setTitle("Home"); // actionbar 타이틀 바꾸기
+                            actionBar.setTitle("study&archive"); // actionbar 타이틀 바꾸기
                             selectedFragment = new HomeFragment();
                             FragmentTransaction ft1 = getSupportFragmentManager().beginTransaction();
                             ft1.replace(R.id.container, selectedFragment , "");

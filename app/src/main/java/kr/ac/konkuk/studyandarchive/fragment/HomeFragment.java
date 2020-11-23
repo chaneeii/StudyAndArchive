@@ -79,7 +79,7 @@ public class HomeFragment extends Fragment {
         //init 포스트리스트 초기화
         postList = new ArrayList<>();
 
-        checkFollowing();
+
 
 
         return  view;
@@ -222,7 +222,7 @@ public class HomeFragment extends Fragment {
         if(user !=null){
             //user is signed in stay here
             // 만약 로그인 되어있다면 홈보여주기
-
+            checkFollowing();
 
         }else{
             //user not signed in, go to main activity
