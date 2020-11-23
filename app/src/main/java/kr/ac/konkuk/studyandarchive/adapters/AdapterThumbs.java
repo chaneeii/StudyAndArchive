@@ -45,7 +45,7 @@ public class AdapterThumbs extends RecyclerView.Adapter<AdapterThumbs.MyHolder> 
         ModelPost post = mPosts.get(i);
 
 
-        Long time = Long.parseLong(post.getpStudyTime());
+        long time = Long.parseLong(post.getpStudyTime());
         int h   = (int)(time /3600000);
         int m = (int)(time - h*3600000)/60000;
         int s= (int)(time - h*3600000- m*60000)/1000 ;

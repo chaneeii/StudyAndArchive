@@ -18,7 +18,7 @@
         <ImageView
             android:id="@+id/post_image"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="250dp"
             android:contentDescription="hello"
             android:layout_centerInParent="true"
             android:src="@drawable/test_image"
@@ -27,7 +27,7 @@
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="250dp"
             android:background="#70000000" />
 
         <TextView

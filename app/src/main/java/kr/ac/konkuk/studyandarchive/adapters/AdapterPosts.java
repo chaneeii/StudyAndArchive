@@ -108,7 +108,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
 //        calendar.setTimeInMillis(Long.parseLong(pTimeStamp));
 //        String pTime = DateFormat.format("yyyy/MM/dd hh:mm aa", calendar).toString();
 
-        Long time = Long.parseLong(pStudyTime);
+        long time = Long.parseLong(pStudyTime);
 
         int h   = (int)(time /3600000);
         int m = (int)(time - h*3600000)/60000;

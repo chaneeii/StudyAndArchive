@@ -186,6 +186,7 @@
                     android:layout_weight="1"
                     android:id="@+id/my_archives"
                     android:text="archive"
+                    android:textStyle="bold"
                     android:textColor="@color/colorPrimary"
                     android:background="@color/colorWhite"/>
 <!--                <View-->
@@ -198,6 +199,7 @@
                     android:layout_weight="1"
                     android:id="@+id/my_study"
                     android:text="study"
+                    android:textStyle="bold"
                     android:textColor="@color/colorPrimary"
                     android:background="@color/colorWhite"/>
             </LinearLayout>
@@ -206,18 +208,100 @@
                 android:layout_height="1dp"
                 android:background="#F5F5F0"/>
 
-            <!--recycler view-->
-            <androidx.recyclerview.widget.RecyclerView
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/recyclerView"/>
+                android:layout_height="wrap_content">
 
-            <!--recycler view study-->
-            <androidx.recyclerview.widget.RecyclerView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:id="@+id/recyclerView_save"/>
+
+
+                <!--recycler view-->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:id="@+id/recyclerView"/>
+
+                <!--recycler view study-->
+                <LinearLayout
+                    android:id="@+id/studyLayoutTop"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Monthly Total"
+                        android:textStyle="bold"
+                        android:textSize="20sp"
+                        android:gravity="center_horizontal"
+                        android:layout_marginTop="10dp"/>
+
+                    <ImageView
+                        android:id="@+id/plantImg"
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        android:src="@drawable/lv1"
+                        android:layout_gravity="center" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/studytime"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="00:00:00"
+                            android:textSize="18sp"
+                            android:layout_weight="1"
+                            android:textStyle="bold"
+                            android:textColor="@color/colorAccent"
+                            android:textAlignment="textEnd"
+                            android:gravity="center_horizontal"
+                            tools:ignore="RtlCompat" />
+
+                        <View
+                            android:layout_width="1.5dp"
+                            android:layout_height="match_parent"
+                            android:background="#F5F5F5"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginRight="20dp"/>
+
+                        <TextView
+                            android:id="@+id/level"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="LV.1"
+                            android:textSize="18sp"
+                            android:layout_weight="1"
+                            android:textStyle="bold"
+                            android:textAlignment="textStart"
+                            android:gravity="center_horizontal"
+                            tools:ignore="RtlCompat" />
+
+                    </LinearLayout>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Monthly Overview"
+                        android:textStyle="bold"
+                        android:textSize="20sp"
+                        android:gravity="center_horizontal"
+                        android:layout_marginTop="30dp"/>
+
+                </LinearLayout>
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/recyclerView_study"
+                    android:layout_below="@+id/studyLayoutTop"/>
+
+            </RelativeLayout>
+
 
         </LinearLayout>
 

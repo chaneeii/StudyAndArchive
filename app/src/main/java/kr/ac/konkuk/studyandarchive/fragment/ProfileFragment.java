@@ -1,6 +1,7 @@
 package kr.ac.konkuk.studyandarchive.fragment;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
@@ -9,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -23,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -56,16 +59,21 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import kr.ac.konkuk.studyandarchive.ColorChips;
 import kr.ac.konkuk.studyandarchive.FollowersActivity;
 import kr.ac.konkuk.studyandarchive.R;
 import kr.ac.konkuk.studyandarchive.StartActivity;
+import kr.ac.konkuk.studyandarchive.adapters.AdapterStudyRecord;
 import kr.ac.konkuk.studyandarchive.adapters.AdapterThumbs;
 import kr.ac.konkuk.studyandarchive.models.ModelPost;
 import kr.ac.konkuk.studyandarchive.models.ModelUser;
@@ -88,10 +96,12 @@ public class ProfileFragment extends Fragment {
     String storagePath = "User_Profile_Cover_Imgs/";
 
     //views from xml
-    ImageView avatarIv, coverIv;
-    TextView nameTV, emailTv, fieldTv, posts, followers, following;
+    ImageView avatarIv, coverIv, plantIv;
+    TextView nameTV, emailTv, fieldTv, posts, followers, following, studytime, levelTv;
     FloatingActionButton fab;
     Button archiveBtn, studyBtn, followBtn;
+
+    LinearLayout studyLayoutTop;
 
     //progress dialog
     ProgressDialog pd;
@@ -115,9 +125,14 @@ public class ProfileFragment extends Fragment {
     String profileid, hisUid;
 
     //리사이클러뷰 (등록한 게시글 아이템 썸네일 출력용 변수)
-    RecyclerView recyclerView;
+    RecyclerView recyclerView, recyclerView_study;
     AdapterThumbs adapterThumbs;
-    List<ModelPost> postList;
+    List<ModelPost> postList, studyList;
+    AdapterStudyRecord adapterRecord;
+
+    String pStudyTime_s;
+
+
 
 
 
@@ -167,12 +182,18 @@ public class ProfileFragment extends Fragment {
         archiveBtn = view.findViewById(R.id.my_archives);
         studyBtn = view.findViewById(R.id.my_study);
         followBtn = view.findViewById(R.id.followBtn);
+        studytime = view.findViewById(R.id.studytime);
+        studyLayoutTop = view.findViewById(R.id.studyLayoutTop);
+        plantIv = view.findViewById(R.id.plantImg);
+        levelTv = view.findViewById(R.id.level);
+
+
 
 
         //init progress dialog
         pd = new ProgressDialog(getActivity());
 
-        //리사이클러뷰
+        //리사이클러뷰 - archive
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new GridLayoutManager(getContext(), 3);
@@ -180,6 +201,23 @@ public class ProfileFragment extends Fragment {
         postList = new ArrayList<>();
         adapterThumbs = new AdapterThumbs(getContext(),postList);
         recyclerView.setAdapter(adapterThumbs);
+
+        //리사이클러뷰
+        recyclerView_study = view.findViewById(R.id.recyclerView_study);
+        recyclerView_study.setHasFixedSize(true);
+//        RecyclerView.LayoutManager linearLayoutManager_study = new LinearLayoutManager(getActivity());
+        recyclerView_study.setLayoutManager(new LinearLayoutManager(getContext()));
+        studyList = new ArrayList<>();
+        adapterRecord = new AdapterStudyRecord(getContext(),studyList);
+        recyclerView_study.setAdapter(adapterRecord);
+
+
+
+        recyclerView.setVisibility(View.VISIBLE);
+        recyclerView_study.setVisibility(View.GONE);
+        studyLayoutTop.setVisibility(View.GONE);
+
+
 
         Log.d(TAG, "누가주인? "+profileid);
 
@@ -239,6 +277,9 @@ public class ProfileFragment extends Fragment {
         getFollowers(); //팔로워팔로잉텍스트뷰 세팅
 //        getNrPosts(); //전체 포스트 개수 세팅
         myThumbs();
+        myRecords();
+
+
 
 
         if(profileid.equals(user.getUid())){
@@ -302,11 +343,40 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        archiveBtn.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceAsColor")
+            @Override
+            public void onClick(View v) {
+                recyclerView.setVisibility(View.VISIBLE);
+                recyclerView_study.setVisibility(View.GONE);
+                studyLayoutTop.setVisibility(View.GONE);
+                archiveBtn.setTextColor(R.color.colorPrimaryDark);
+                studyBtn.setTextColor(Color.GRAY);
+            }
+        });
+
+        studyBtn.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceAsColor")
+            @Override
+            public void onClick(View v) {
+                recyclerView.setVisibility(View.GONE);
+                recyclerView_study.setVisibility(View.VISIBLE);
+                studyLayoutTop.setVisibility(View.VISIBLE);
+                studyBtn.setTextColor(R.color.colorPrimaryDark );
+                archiveBtn.setTextColor(Color.GRAY);
+            }
+        });
+
+
+
 
         return view;
     }
 
 
+
+
+    //checkFollow와 역할 겹침
     private void isFollowing(final String userid, final Button button){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
                 .child("Follow").child(user.getUid()).child("following");
@@ -496,6 +566,7 @@ public class ProfileFragment extends Fragment {
                 Collections.reverse(postList);
                 adapterThumbs.notifyDataSetChanged();
                 posts.setText(""+i);
+
             }
 
             @Override
@@ -505,6 +576,130 @@ public class ProfileFragment extends Fragment {
         });
     }
 
+    private void myRecords() {
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                studyList.clear();
+                long result = 0;
+                for(DataSnapshot snapshot : dataSnapshot.getChildren() ){
+                    ModelPost post = snapshot.getValue(ModelPost.class);
+//                    String hisUid = ""+ dataSnapshot.child("uid").getValue();
+                    if(post.getUid().equals(profileid)){
+
+                        Log.d(TAG, "용용주인" + profileid );
+
+                        //timestamp 변환
+                        Long timeStamp = Long.parseLong(post.getpTime());
+                        Calendar calendar = Calendar.getInstance(Locale.getDefault());
+                        calendar.setTimeInMillis(timeStamp);
+
+                        // 기록이등록된날짜
+                        String pMonth = DateFormat.format("MM", calendar).toString();
+
+                        //이번달
+                        Date currentTime = Calendar.getInstance().getTime();
+                        SimpleDateFormat thisMonthF = new SimpleDateFormat("MM", Locale.getDefault());
+                        String thisMonth = thisMonthF.format(currentTime);
+
+                        if(thisMonth.equals(pMonth)){
+                            //월
+                            studyList.add(post);
+                            long time = Long.parseLong(post.getpStudyTime());
+                            result += time;
+                        }
+
+                    }//if
+
+
+                } //for
+                Collections.reverse(studyList);
+                adapterRecord.notifyDataSetChanged();
+
+                int h   = (int)(result/3600000);
+                int m = (int)(result- h*3600000)/60000;
+                int s= (int)(result- h*3600000- m*60000)/1000 ;
+                pStudyTime_s = " "+(h < 10 ? "0"+h: h)+":"+(m < 10 ? "0"+m: m)+":"+(s < 10 ? "0"+s: s);
+
+                if(result!=0){
+                    studytime.setText(pStudyTime_s);
+
+                    if(h>=10 && h<50){ //lv2
+
+                        plantIv.setImageResource(R.drawable.lv2);
+                        levelTv.setText("LV. 2");
+
+                    }else if(h>=50 && h<100){ //lv3
+
+                        plantIv.setImageResource(R.drawable.lv3);
+                        levelTv.setText("LV. 3");
+
+                    }else if(h<200 && h>=100){ //lv4
+
+                        plantIv.setImageResource(R.drawable.lv4);
+                        levelTv.setText("LV. 4");
+
+                    }else if(h>=200){ //lv5
+
+                        plantIv.setImageResource(R.drawable.lv5);
+                        levelTv.setText("LV. 5");
+
+                    }else{ //lv0
+
+                        plantIv.setImageResource(R.drawable.lv1);
+                        levelTv.setText("LV. 1");
+                    }
+
+
+                }else{
+                    studytime.setText("이달 기록 없음");
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+    private void calc_level(long result) {
+
+        int h   = (int)(result/3600000);
+
+        if(h>=10 && h<50){ //lv2
+
+            plantIv.setImageResource(R.drawable.lv2);
+            levelTv.setText("LV. 2");
+
+        }else if(h>=50 && h<100){ //lv3
+
+            plantIv.setImageResource(R.drawable.lv3);
+            levelTv.setText("LV. 3");
+
+        }else if(h<200 && h>=100){ //lv4
+
+            plantIv.setImageResource(R.drawable.lv4);
+            levelTv.setText("LV. 4");
+
+        }else if(h>=200){ //lv5
+
+            plantIv.setImageResource(R.drawable.lv5);
+            levelTv.setText("LV. 5");
+
+        }else{ //lv0
+
+            plantIv.setImageResource(R.drawable.lv1);
+            levelTv.setText("LV. 1");
+        }
+
+
+    }
 
 
     // STORAGE PERMISSION
