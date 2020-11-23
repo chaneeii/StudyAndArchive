@@ -11,6 +11,17 @@ tools:context=".fragment.RecordFragment">
         android:orientation="vertical"
         android:gravity="center">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Study"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="30dp"
+        />
+
+
 
         <Chronometer
             android:layout_width="150dp"
@@ -23,25 +34,33 @@ tools:context=".fragment.RecordFragment">
             android:background="@drawable/bg_round"/>
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:id="@+id/bt_start"
             android:text="start"
-            android:layout_marginTop="8dp"
+            android:textSize="16sp"
+            android:textColor="@color/colorWhite"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/button_a"
             />
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:id="@+id/bt_pause"
             android:text="pause"
-            android:layout_marginTop="8dp" />
+            android:layout_marginTop="8dp"
+            android:textSize="16sp"
+            android:textColor="@color/colorWhite"
+            android:background="@drawable/button_a"/>
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
+            android:background="@drawable/btn_background_white"
             android:id="@+id/bt_reset"
             android:text="reset"
+            android:textColor="@color/colorPrimaryDark"
             android:layout_marginTop="8dp" />
 
         <Button
@@ -49,6 +68,9 @@ tools:context=".fragment.RecordFragment">
             android:layout_height="wrap_content"
             android:id="@+id/bt_finish"
             android:text="학습완료"
+            android:textStyle="bold"
+            android:textColor="@color/colorWhite"
+            android:background="@drawable/button_b"
             android:layout_marginTop="100dp" />
 
 
