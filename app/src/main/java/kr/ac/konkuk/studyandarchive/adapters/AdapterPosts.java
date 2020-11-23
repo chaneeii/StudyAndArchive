@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import kr.ac.konkuk.studyandarchive.ColorChips;
 import kr.ac.konkuk.studyandarchive.PostDetailActivity;
 import kr.ac.konkuk.studyandarchive.R;
 import kr.ac.konkuk.studyandarchive.models.ModelPost;
@@ -120,6 +121,9 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         myHolder.pStudyTime.setText(pStudyTime_s);
         myHolder.pTitleTv.setText(pTitle);
         myHolder.uFieldTv.setText(uField);
+
+        //각 컬러칩 색상 입히기
+        ColorChips colorChips = new ColorChips(uField ,myHolder.uFieldTv ,context);
 
 
         //포스트 이미지 설정

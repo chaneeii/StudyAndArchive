@@ -38,7 +38,7 @@
                 android:id="@+id/fieldTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/radius"
+                android:background="@drawable/chip_gray"
                 android:paddingLeft="5dp"
                 android:paddingTop="3dp"
                 android:paddingRight="5dp"

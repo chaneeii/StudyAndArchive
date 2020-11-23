@@ -137,6 +137,7 @@ public class PostDetailActivity extends AppCompatActivity {
 
         loadPostInfo();
 
+
         checkUserStatus();
 
         loadUserInfo();
@@ -218,7 +219,7 @@ public class PostDetailActivity extends AppCompatActivity {
 
         if( ! hisUid.equals(firebaseUser.getUid()) ) {
             Log.d(TAG, "게시글 주인아니디 " + userid);
-            Log.d(TAG, "로그인된 사용ㅇ자" + firebaseUser.getUid());
+            Log.d(TAG, "로그인된 사용자" + firebaseUser.getUid());
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Notifications").child(userid);
 
             HashMap<String, Object> hashMap = new HashMap<>();
@@ -230,7 +231,7 @@ public class PostDetailActivity extends AppCompatActivity {
             reference.push().setValue(hashMap);
         }else{
             Log.d(TAG, "게시글 주인아니디 "+hisUid);
-            Log.d(TAG, "로그인된 사용ㅇ자" + firebaseUser.getUid());
+            Log.d(TAG, "로그인된 사용자" + firebaseUser.getUid());
         }
 
     }
@@ -628,6 +629,11 @@ public class PostDetailActivity extends AppCompatActivity {
                     uNameTv.setText(hisName);
                     uFieldTv.setText(hisField);
                     pCommentsTv.setText(commentCount+" Comments");
+
+                    //각 컬러칩 색상 입히기
+                    ColorChips colorChips = new ColorChips(hisField ,uFieldTv ,getApplicationContext());
+
+
 
                     // 유저 이미지 설정 (포스트주인)
                     //포스트 이미지 설정

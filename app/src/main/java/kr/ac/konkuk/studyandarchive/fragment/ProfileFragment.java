@@ -62,6 +62,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import kr.ac.konkuk.studyandarchive.ColorChips;
 import kr.ac.konkuk.studyandarchive.FollowersActivity;
 import kr.ac.konkuk.studyandarchive.R;
 import kr.ac.konkuk.studyandarchive.StartActivity;
@@ -128,8 +129,11 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
+
 
 
 
@@ -366,6 +370,8 @@ public class ProfileFragment extends Fragment {
                     nameTV.setText(name);
 //                    emailTv.setText(email);
                     fieldTv.setText(field);
+                    //각 컬러칩 색상 입히기
+                    ColorChips colorChips = new ColorChips(field ,fieldTv, getContext());
                     try{
                         //if image is received then set
                         Picasso.get().load(image).into(avatarIv);
@@ -1087,6 +1093,10 @@ public class ProfileFragment extends Fragment {
         }
 
     }
+
+    
+
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

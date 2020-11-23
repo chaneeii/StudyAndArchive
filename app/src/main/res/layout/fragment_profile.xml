@@ -88,7 +88,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="컴퓨터/통신"
-                        android:background="@drawable/radius"
+                        android:background="@drawable/chip_gray"
                         android:textColor="@color/colorWhite"
                         android:textSize="10sp"
                         android:paddingLeft="5dp"

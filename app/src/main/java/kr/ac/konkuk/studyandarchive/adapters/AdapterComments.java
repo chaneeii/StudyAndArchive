@@ -26,6 +26,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import kr.ac.konkuk.studyandarchive.ColorChips;
 import kr.ac.konkuk.studyandarchive.R;
 import kr.ac.konkuk.studyandarchive.models.ModelComment;
 
@@ -74,6 +75,10 @@ public class AdapterComments extends RecyclerView.Adapter<AdapterComments.MyHold
         myHolder.commentTv.setText(comment);
         myHolder.timeTv.setText(pTime);
         myHolder.fieldTv.setText(field);
+
+        //각 컬러칩 색상 입히기
+        ColorChips colorChips = new ColorChips(field ,myHolder.fieldTv, context);
+
         //set user dp
         try{
             Picasso.get().load(image).placeholder(R.drawable.ic_default_img_purple).into(myHolder.avatarIv);

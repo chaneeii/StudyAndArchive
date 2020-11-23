@@ -31,6 +31,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import kr.ac.konkuk.studyandarchive.ColorChips;
 import kr.ac.konkuk.studyandarchive.DashboardActivity;
 import kr.ac.konkuk.studyandarchive.R;
 import kr.ac.konkuk.studyandarchive.fragment.ProfileFragment;
@@ -76,12 +77,9 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder>{
         final String userName = userList.get(i).getName();
         final String userField = userList.get(i).getField();
 
-        //필스 생상
-        if(userField.equals("디자인")){
-            myHolder.mFieldTv.setBackground(ContextCompat.getDrawable(context, R.drawable.radius_yellow));
-            myHolder.mFieldTv.setTextColor(Color.parseColor("#ffffff"));
-        }
 
+        //각 컬러칩 색상 입히기
+        ColorChips colorChips = new ColorChips(userField,myHolder.mFieldTv,context);
 
 
         //setData
