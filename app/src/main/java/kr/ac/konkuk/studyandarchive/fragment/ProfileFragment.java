@@ -16,7 +16,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -62,7 +61,6 @@ import com.squareup.picasso.Picasso;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -73,7 +71,7 @@ import kr.ac.konkuk.studyandarchive.ColorChips;
 import kr.ac.konkuk.studyandarchive.FollowersActivity;
 import kr.ac.konkuk.studyandarchive.R;
 import kr.ac.konkuk.studyandarchive.StartActivity;
-import kr.ac.konkuk.studyandarchive.adapters.AdapterStudyRecord;
+import kr.ac.konkuk.studyandarchive.adapters.AdapterStudyRecords;
 import kr.ac.konkuk.studyandarchive.adapters.AdapterThumbs;
 import kr.ac.konkuk.studyandarchive.models.ModelPost;
 import kr.ac.konkuk.studyandarchive.models.ModelUser;
@@ -128,7 +126,7 @@ public class ProfileFragment extends Fragment {
     RecyclerView recyclerView, recyclerView_study;
     AdapterThumbs adapterThumbs;
     List<ModelPost> postList, studyList;
-    AdapterStudyRecord adapterRecord;
+    AdapterStudyRecords adapterRecord;
 
     String pStudyTime_s;
 
@@ -208,7 +206,7 @@ public class ProfileFragment extends Fragment {
 //        RecyclerView.LayoutManager linearLayoutManager_study = new LinearLayoutManager(getActivity());
         recyclerView_study.setLayoutManager(new LinearLayoutManager(getContext()));
         studyList = new ArrayList<>();
-        adapterRecord = new AdapterStudyRecord(getContext(),studyList);
+        adapterRecord = new AdapterStudyRecords(getContext(),studyList);
         recyclerView_study.setAdapter(adapterRecord);
 
 

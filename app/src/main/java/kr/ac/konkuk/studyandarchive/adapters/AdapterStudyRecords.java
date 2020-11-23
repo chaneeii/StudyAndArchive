@@ -2,11 +2,9 @@ package kr.ac.konkuk.studyandarchive.adapters;
 
 import android.content.Context;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,14 +19,12 @@ import java.util.Locale;
 import kr.ac.konkuk.studyandarchive.R;
 import kr.ac.konkuk.studyandarchive.models.ModelPost;
 
-import static android.content.ContentValues.TAG;
-
-public class AdapterStudyRecord extends RecyclerView.Adapter<AdapterStudyRecord.MyHolder>{
+public class AdapterStudyRecords extends RecyclerView.Adapter<AdapterStudyRecords.MyHolder>{
 
     private Context context;
     private List<ModelPost> mPosts;
 
-    public AdapterStudyRecord(Context context, List<ModelPost> mPosts) {
+    public AdapterStudyRecords(Context context, List<ModelPost> mPosts) {
         this.context = context;
         this.mPosts = mPosts;
     }
@@ -37,7 +33,7 @@ public class AdapterStudyRecord extends RecyclerView.Adapter<AdapterStudyRecord.
     @Override
     public MyHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.row_records, viewGroup, false);
-        return new AdapterStudyRecord.MyHolder(view);
+        return new AdapterStudyRecords.MyHolder(view);
     }
 
     @Override
