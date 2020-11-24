@@ -145,32 +145,3 @@ public class RecordFragment extends Fragment {
 
 }
 
-
-
-
-
-
-
-
-
-//    public void startChronometer(View view) {
-//        if(!running){
-//            chronometer.setBase(SystemClock.elapsedRealtime() - pauseOffset );
-//            chronometer.start();
-//            running = true;
-//        }
-//
-//    }
-
-//    public void pauseChronometer(View view) {
-//        if(running){
-//            chronometer.stop();
-//            pauseOffset = SystemClock.elapsedRealtime() -chronometer.getBase();
-//            running = false;
-//        }
-//    }
-//
-//    public void resetChronometer(View view) {
-//        chronometer.setBase(SystemClock.elapsedRealtime());
-//        pauseOffset=0;
-//    }

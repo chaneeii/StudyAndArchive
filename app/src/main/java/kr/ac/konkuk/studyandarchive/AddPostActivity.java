@@ -196,6 +196,7 @@ public class AddPostActivity extends AppCompatActivity {
     }
 
 
+    //포스트 등록
     private void uploadData(final String studytime, final String title, final String description, String uri, final String url) {
 
         pd.setMessage("포스팅을 업로드 하는 중");
@@ -287,6 +288,7 @@ public class AddPostActivity extends AppCompatActivity {
 
     }
 
+    // 카메라와 갤러리 선택이 가능한 다이얼로그
     private void showImagePickDialog() {
         // 카메라와 갤러리 선택이 가능한 다이얼로그 show
         // 카메라 : 카메라 & storage 퍼미션필요
@@ -341,7 +343,6 @@ public class AddPostActivity extends AppCompatActivity {
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)== (PackageManager.PERMISSION_GRANTED);
         return result;
     }
-
     private void requestStoragePermission(){
         //request runtime storage permission
         ActivityCompat.requestPermissions(this,storagePermissions, STORAGE_REQUEST_CODE);
@@ -361,27 +362,32 @@ public class AddPostActivity extends AppCompatActivity {
                 == (PackageManager.PERMISSION_GRANTED);
         return result && result1 ;
     }
-
     private void requestCameraPermission(){
         //request runtime storage permission
         ActivityCompat.requestPermissions(this,cameraPermissions, CAMERA_REQUEST_CODE);
     }
 
+
+
+    //카메라에서 사진 업로드 하기위한 인텐트
     private void pickFromCamera() {
         // Intent of Picking image from device camera
         ContentValues values = new ContentValues();
         values.put(MediaStore.Images.Media.TITLE, "Temp Pic");
         values.put(MediaStore.Images.Media.DESCRIPTION, "Temp Description");
         // put image uri
+        // uri 이미지 넣기
         image_uri = this.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
 
         // intent to start camera
+        // 카메라 시작하기 위한 인텐트
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, image_uri);
         startActivityForResult(cameraIntent, IMAGE_PICK_CAMERA_CODE);
 
     }
 
+    // 갤러리에서 사진 선택 하기 위한 인텐트
     private void pickFromGallery() {
         //pick from gallery
         Intent galleryIntent = new Intent(Intent.ACTION_PICK);
@@ -450,7 +456,7 @@ public class AddPostActivity extends AppCompatActivity {
    // HANDLE PERMISSION
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        /* 이 메소드는 사용자가 퍼비션 리퀘스트 다이얼로그에 허락하거나 거부하면 호출되어 각 경우를 핸들링함.
+        /* 사용자가 퍼비션 리퀘스트 다이얼로그에 허락하거나 거부하면 호출되어 각 경우를 핸들링함.
          * */
 
         switch (requestCode){
@@ -488,9 +494,11 @@ public class AddPostActivity extends AppCompatActivity {
 //        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
+
+    // 카메라나 갤러리에서 이미지 선택후 호출되어 이미지뷰 설정
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        // 카메라나 갤러리에서 이미지 선택후 호출됨
+
         if (resultCode == RESULT_OK){
 
             if(requestCode == IMAGE_PICK_GALLERY_CODE){

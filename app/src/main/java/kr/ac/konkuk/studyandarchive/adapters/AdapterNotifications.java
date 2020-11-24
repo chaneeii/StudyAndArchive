@@ -127,7 +127,6 @@ public class AdapterNotifications extends RecyclerView.Adapter<AdapterNotificati
 //                String uImage = user.getImage();
                 try{
                         Picasso.get().load(user.getImage()).into(imageView);
-//                        Picasso.get().load(user.getImage()).placeholder(R.drawable.test_image).into(imageView);
                 }catch (Exception e){
                         Picasso.get().load(R.drawable.ic_default_img_white).into(imageView);
                 }

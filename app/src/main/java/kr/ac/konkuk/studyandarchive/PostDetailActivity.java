@@ -135,25 +135,21 @@ public class PostDetailActivity extends AppCompatActivity {
         sendBtn = findViewById(R.id.sendBtn);
         cAvatarIv = findViewById(R.id.cAvatar);
 
+
+        // 현재 포스트 정보 불러오기
         loadPostInfo();
 
-
+        // 로그인된 사용자인지 확인
         checkUserStatus();
 
+        // 사용자 정보 불러오기
         loadUserInfo();
 
+        //좋아요 설정하기
         setLikes();
 
+        // 댓글 불러오기
         loadComments();
-
-
-//        if(! hisUid.equals(firebaseUser.getUid())){
-////            moreBtn.setVisibility(View.GONE);
-//            Log.d(TAG, "onCreate: 내포스트");
-//        }else{
-//            Log.d(TAG, "onCreate: 이포스트 내꺼아님");
-//        }
-
 
 
         //send comment 보내기 버튼 클릭
@@ -193,362 +189,12 @@ public class PostDetailActivity extends AppCompatActivity {
             }
         });
 
-//        uPictureIv.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                SharedPreferences.Editor editor =getSharedPreferences("PREFS", Context.MODE_PRIVATE).edit();
-//                editor.putString("profileid", hisUid );
-//                editor.apply();
-//
-//                ProfileFragment fragment2 = new ProfileFragment();
-//
-//                FragmentManager fragmentManager = getSupportFragmentManager();
-//                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//                fragmentTransaction.replace(R.id.container, fragment2);
-//                fragmentTransaction.commit();
-//
-//            }
-//        });
-
-
-    }
-
-
-    //알림 - 좋아요
-    private void addNotifications(String userid, String postid){
-
-        if( ! hisUid.equals(firebaseUser.getUid()) ) {
-            Log.d(TAG, "게시글 주인아니디 " + userid);
-            Log.d(TAG, "로그인된 사용자" + firebaseUser.getUid());
-            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Notifications").child(userid);
-
-            HashMap<String, Object> hashMap = new HashMap<>();
-            hashMap.put("userid", firebaseUser.getUid());
-            hashMap.put("text", "님이 이 게시글을 좋아합니다.");
-            hashMap.put("postid", postid);
-            hashMap.put("ispost", true);
-
-            reference.push().setValue(hashMap);
-        }else{
-            Log.d(TAG, "게시글 주인아니디 "+hisUid);
-            Log.d(TAG, "로그인된 사용자" + firebaseUser.getUid());
-        }
-
-    }
-
-    //알림 - 댓글
-    private void addNotifications(){
-
-        if( ! hisUid.equals(firebaseUser.getUid())){
-            Log.d(TAG, "게시글 주인아니디 " + hisUid);
-            Log.d(TAG, "로그인된 사용자" + firebaseUser.getUid());
-            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Notifications").child(hisUid);
-            HashMap<String, Object> hashMap = new HashMap<>();
-            hashMap.put("userid", firebaseUser.getUid() );
-            hashMap.put("text", "님이 이 게시글에 댓글을 남겼습니다");
-            hashMap.put("postid",postId);
-            hashMap.put("ispost",true);
-            reference.push().setValue(hashMap);
-        }else{
-            Log.d(TAG, "게시글 주인아니디 "+hisUid);
-            Log.d(TAG, "로그인된 사용자" + firebaseUser.getUid());
-        }
 
     }
 
 
 
-    private void loadComments() {
-        //layout(Linear) for 리사이클러뷰
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-        //리사이클러뷰에 레이아웃설정
-        recyclerView.setLayoutManager(layoutManager);
-
-
-        //init commentlist
-        commentList = new ArrayList<>();
-
-
-        // comment를 get하기위한 post 경로
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts").child(postId).child("Comments");
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                commentList.clear();
-                for(DataSnapshot ds : snapshot.getChildren()){
-                    ModelComment modelComment = ds.getValue(ModelComment.class);
-
-                    commentList.add(modelComment);
-
-                    // myUid와 postId를 comment adpater 생성자의 파라미터로 넘김
-
-
-
-                    //setup adapter
-                    adapterComments = new AdapterComments(getApplicationContext(), commentList, myUid, postId);
-                    //set adapter
-                    recyclerView.setAdapter(adapterComments);
-
-
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-
-
-    }
-
-    private void showMoreOptions() {
-
-
-        //pop 메뉴 생성
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-            PopupMenu popupMenu = new PopupMenu(this, moreBtn, Gravity.END);
-            //delete/edit 옵션 (현재 로그인된 사용자의 게시글의 경우)
-            if(hisUid.equals(myUid)){
-                //add items in menu
-                popupMenu.getMenu().add(Menu.NONE, 0, 0, "삭제하기");
-                popupMenu.getMenu().add(Menu.NONE, 1, 2, "수정하기");
-            }
-
-            // 각 아이템 선택시
-            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem menuItem) {
-
-                    int id = menuItem.getItemId();
-                    if(id==0){
-                        // 삭제하기
-                        beginDelete();
-                    }
-                    else if (id==1){
-                        // 수정하기
-                        // AddPostActivity를 "editPost"키와 클릭된 포스트이 id로로 시작한다
-                        Intent intent = new Intent(PostDetailActivity.this, AddPostActivity.class);
-                        intent.putExtra("key","editPost");
-                        intent.putExtra("editPostId",postId);
-                        startActivity(intent);
-                    }
-
-                    return false;
-                }
-            });
-
-
-        }else{
-            Toast.makeText(this, "버전이 낮아 이용 불가능합니다. 안드로이드 키켓이상 지원", Toast.LENGTH_SHORT).show();
-        }
-
-
-    }
-
-    private void beginDelete() {
-        deleteWithImage(postId, pImage);
-    }
-
-    private void deleteWithImage(final String postId, String pImage) {
-        //progres bar
-        final ProgressDialog pd = new ProgressDialog(this);
-        pd.setMessage("삭제하는 중");
-        /*
-        * Step :
-        * 1. image를 url이용해서 삭제
-        * 2. post id로 database에서 삭제
-        * */
-
-        StorageReference picRef = FirebaseStorage.getInstance().getReferenceFromUrl(pImage);
-        picRef.delete()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        //이미지가 성공적으로 삭제되면
-                        Query fquery = FirebaseDatabase.getInstance().getReference("Posts").orderByChild("pId").equalTo(postId);
-                        fquery.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                for(DataSnapshot ds : snapshot.getChildren()){
-                                    ds.getRef().removeValue(); // pid가 일치하는 파이어베이스 저장소에서 삭제
-                                }
-                                //삭제되면
-                                Toast.makeText(PostDetailActivity.this, "성공적으로 삭제했습니다.", Toast.LENGTH_SHORT).show();
-                                pd.dismiss();
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        //삭제실패하면 더이상 진행못함.
-                        Toast.makeText(PostDetailActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-
-
-    }
-
-    private void setLikes() {
-        // 포스트가 로딩될때, 현재 유저가 좋아요 눌럿는지 아닌지 체크함
-        final DatabaseReference likeRef = FirebaseDatabase.getInstance().getReference().child("Likes");
-
-        likeRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.child(postId).hasChild(myUid)){
-                    //사용자가 좋아요를 누르면
-                    //ui도 적용
-                    likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_fire_red,0,0,0);
-
-                }else{
-                    //좋아요 한번더 눌러서 안좋아하면면
-                    //ui도 적용
-                    likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_fire,0,0,0);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-    }
-
-    private void likePost() {
-        // post의 전체 좋아요 수를 가져온다.
-        // 만약 현재로그인된 사용자가 좋아요 누른적이 없다면 좋아요수를 1증가 아님 1감소
-        mProcessLike = true;
-        final DatabaseReference likeRef = FirebaseDatabase.getInstance().getReference().child("Likes");
-        final DatabaseReference postRef = FirebaseDatabase.getInstance().getReference().child("Posts");
-        likeRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(mProcessLike){
-                    if(snapshot.child(postId).hasChild(myUid)){
-                        // 이미 좋아요를 눌었으면, 좋아요 삭제하기
-                        postRef.child(postId).child("pLikes").setValue(""+(Integer.parseInt(pLikes)-1)); //개수삭제
-                        likeRef.child(postId).child(myUid).removeValue();
-                        mProcessLike = false;
-
-
-                    }else {
-                        //좋아요를 누르지않았다면, 좋아요표기하기
-                        if (pLikes==null){
-                            pLikes ="0";
-                        }
-                        postRef.child(postId).child("pLikes").setValue(""+(Integer.parseInt(pLikes)+1)); //좋아요 추가
-                        likeRef.child(postId).child(myUid).setValue("Liked"); // 아무 밸류나 설정해도됨.
-                        mProcessLike = false;
-
-                        //알림
-                        addNotifications(hisUid, postId);
-
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-
-    }
-
-    private void postComment() {
-        pd = new ProgressDialog(this);
-        pd.setMessage("댓글을 추가하는 중");
-
-        // comment edit text에서 댓글 가져오기
-        String comment = commentEt.getText().toString().trim();
-        //validate
-        if(TextUtils.isEmpty(comment)){
-            //입력값 없을 때
-            Toast.makeText(this, "입력된 내용이 없습니다.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        //현재시각
-        String timeStamp = String.valueOf(System.currentTimeMillis());
-
-        // 각 포스트는 "comment"라는 child 가짐. 새로운 스키마
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts").child(postId).child("Comments");
-
-        HashMap<String, Object> hashMap = new HashMap<>();
-        // hashmap에 넣기
-        hashMap.put("cId", timeStamp);
-        hashMap.put("comment",comment);
-        hashMap.put("timeStamp",timeStamp);
-        hashMap.put("uid",myUid);
-        hashMap.put("uEmail",myEmail);
-        hashMap.put("uDp",myDp);
-        hashMap.put("uName",myName);
-        hashMap.put("uField",myField);
-
-        // db에 해시맵 데이터 넣기
-        ref.child(timeStamp).setValue(hashMap)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        //추가되면
-                        pd.dismiss();
-                        Toast.makeText(PostDetailActivity.this, "성공적으로 댓글이 추가되었습니다.", Toast.LENGTH_SHORT).show();
-                        commentEt.setText("");
-                        updateCommentCount();
-                        addNotifications();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        //실패시, 추가 안됨
-                        pd.dismiss();
-                        Toast.makeText(PostDetailActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-        });
-
-
-
-    }
-
-
-    private void updateCommentCount() {
-        //댓글 달리면 증가
-        mProcessComment = true;
-        final DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts").child(postId);
-
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(mProcessComment){
-                    //댓글 추가되면
-                    String comments = ""+ snapshot.child("pComments").getValue();
-                    int newCommentVal = Integer.parseInt(comments)+1;
-                    ref.child("pComments").setValue(""+newCommentVal);
-                    mProcessComment = false;
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-
-    }
-
+    //사용자 정보 부르기
     private void loadUserInfo() {
         //get current user info (현재 이용중인 사용자)
         Query myRef = FirebaseDatabase.getInstance().getReference("Users");
@@ -580,6 +226,7 @@ public class PostDetailActivity extends AppCompatActivity {
 
     }
 
+    // 게시글 정보 가져오기
     private void loadPostInfo() {
         // post id 로  post 가져오기
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts");
@@ -664,6 +311,206 @@ public class PostDetailActivity extends AppCompatActivity {
 
     }
 
+    //댓글 로드
+    private void loadComments() {
+        //layout(Linear) for 리사이클러뷰
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        //리사이클러뷰에 레이아웃설정
+        recyclerView.setLayoutManager(layoutManager);
+
+
+        //init commentlist
+        commentList = new ArrayList<>();
+
+
+        // comment를 get하기위한 post 경로
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts").child(postId).child("Comments");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                commentList.clear();
+                for(DataSnapshot ds : snapshot.getChildren()){
+                    ModelComment modelComment = ds.getValue(ModelComment.class);
+
+                    commentList.add(modelComment);
+
+                    // myUid와 postId를 comment adpater 생성자의 파라미터로 넘김
+                    //setup adapter
+                    adapterComments = new AdapterComments(getApplicationContext(), commentList, myUid, postId);
+                    //set adapter
+                    recyclerView.setAdapter(adapterComments);
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+
+    }
+
+
+
+    // 좋아요설정
+    private void setLikes() {
+        // 포스트가 로딩될때, 현재 유저가 좋아요 눌럿는지 아닌지 체크함
+        final DatabaseReference likeRef = FirebaseDatabase.getInstance().getReference().child("Likes");
+
+        likeRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.child(postId).hasChild(myUid)){
+                    //사용자가 좋아요를 누르면
+                    //ui도 적용
+                    likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_fire_red,0,0,0);
+
+                }else{
+                    //좋아요 한번더 눌러서 안좋아하면면
+                    //ui도 적용
+                    likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_fire,0,0,0);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+    // 좋아요
+    private void likePost() {
+        // post의 전체 좋아요 수를 가져온다.
+        // 만약 현재로그인된 사용자가 좋아요 누른적이 없다면 좋아요수를 1증가 아님 1감소
+        mProcessLike = true;
+        final DatabaseReference likeRef = FirebaseDatabase.getInstance().getReference().child("Likes");
+        final DatabaseReference postRef = FirebaseDatabase.getInstance().getReference().child("Posts");
+        likeRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(mProcessLike){
+                    if(snapshot.child(postId).hasChild(myUid)){
+                        // 이미 좋아요를 눌었으면, 좋아요 삭제하기
+                        postRef.child(postId).child("pLikes").setValue(""+(Integer.parseInt(pLikes)-1)); //개수삭제
+                        likeRef.child(postId).child(myUid).removeValue();
+                        mProcessLike = false;
+
+
+                    }else {
+                        //좋아요를 누르지않았다면, 좋아요표기하기
+                        if (pLikes==null){
+                            pLikes ="0";
+                        }
+                        postRef.child(postId).child("pLikes").setValue(""+(Integer.parseInt(pLikes)+1)); //좋아요 추가
+                        likeRef.child(postId).child(myUid).setValue("Liked"); // 아무 밸류나 설정해도됨.
+                        mProcessLike = false;
+
+                        //알림
+                        addNotifications(hisUid, postId);
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+    }
+
+    // 커멘트 추가
+    private void postComment() {
+        pd = new ProgressDialog(this);
+        pd.setMessage("댓글을 추가하는 중");
+
+        // comment edit text에서 댓글 가져오기
+        String comment = commentEt.getText().toString().trim();
+        //validate
+        if(TextUtils.isEmpty(comment)){
+            //입력값 없을 때
+            Toast.makeText(this, "입력된 내용이 없습니다.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        //현재시각
+        String timeStamp = String.valueOf(System.currentTimeMillis());
+
+        // 각 포스트는 "comment"라는 child 가짐. 새로운 스키마
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts").child(postId).child("Comments");
+
+        HashMap<String, Object> hashMap = new HashMap<>();
+        // hashmap에 넣기
+        hashMap.put("cId", timeStamp);
+        hashMap.put("comment",comment);
+        hashMap.put("timeStamp",timeStamp);
+        hashMap.put("uid",myUid);
+        hashMap.put("uEmail",myEmail);
+        hashMap.put("uDp",myDp);
+        hashMap.put("uName",myName);
+        hashMap.put("uField",myField);
+
+        // db에 해시맵 데이터 넣기
+        ref.child(timeStamp).setValue(hashMap)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        //추가되면
+                        pd.dismiss();
+                        Toast.makeText(PostDetailActivity.this, "성공적으로 댓글이 추가되었습니다.", Toast.LENGTH_SHORT).show();
+                        commentEt.setText("");
+                        updateCommentCount();
+                        addNotifications();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                //실패시, 추가 안됨
+                pd.dismiss();
+                Toast.makeText(PostDetailActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+
+    }
+
+    // 댓글 개수 추가
+    private void updateCommentCount() {
+        //댓글 달리면 증가
+        mProcessComment = true;
+        final DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts").child(postId);
+
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(mProcessComment){
+                    //댓글 추가되면
+                    String comments = ""+ snapshot.child("pComments").getValue();
+                    int newCommentVal = Integer.parseInt(comments)+1;
+                    ref.child("pComments").setValue(""+newCommentVal);
+                    mProcessComment = false;
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+    }
+
+
+    //사용자 상태체크
     private  void checkUserStatus(){
 
         //get current user
@@ -684,6 +531,158 @@ public class PostDetailActivity extends AppCompatActivity {
         }
 
     }
+
+
+
+    //알림 - 좋아요
+    private void addNotifications(String userid, String postid){
+
+        if( ! hisUid.equals(firebaseUser.getUid()) ) {
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Notifications").child(userid);
+
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("userid", firebaseUser.getUid());
+            hashMap.put("text", "님이 이 게시글을 좋아합니다.");
+            hashMap.put("postid", postid);
+            hashMap.put("ispost", true);
+
+            reference.push().setValue(hashMap);
+        }else{
+            Log.d(TAG, "게시글 주인아니디 "+hisUid);
+            Log.d(TAG, "로그인된 사용자" + firebaseUser.getUid());
+        }
+
+    }
+
+    //알림 - 댓글
+    private void addNotifications(){
+
+        if( ! hisUid.equals(firebaseUser.getUid())){
+            Log.d(TAG, "게시글 주인아니디 " + hisUid);
+            Log.d(TAG, "로그인된 사용자" + firebaseUser.getUid());
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Notifications").child(hisUid);
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("userid", firebaseUser.getUid() );
+            hashMap.put("text", "님이 이 게시글에 댓글을 남겼습니다");
+            hashMap.put("postid",postId);
+            hashMap.put("ispost",true);
+            reference.push().setValue(hashMap);
+        }else{
+
+        }
+
+    }
+
+
+
+
+
+
+    //*삭제, 수정 (구현 완벽 x )
+    private void showMoreOptions() {
+
+
+        //pop 메뉴 생성
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+            PopupMenu popupMenu = new PopupMenu(this, moreBtn, Gravity.END);
+            //delete/edit 옵션 (현재 로그인된 사용자의 게시글의 경우)
+            if(hisUid.equals(myUid)){
+                //add items in menu
+                popupMenu.getMenu().add(Menu.NONE, 0, 0, "삭제하기");
+                popupMenu.getMenu().add(Menu.NONE, 1, 2, "수정하기");
+            }
+
+            // 각 아이템 선택시
+            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem menuItem) {
+
+                    int id = menuItem.getItemId();
+                    if(id==0){
+                        // 삭제하기
+                        beginDelete();
+                    }
+                    else if (id==1){
+                        // 수정하기
+                        // AddPostActivity를 "editPost"키와 클릭된 포스트이 id로로 시작한다
+                        Intent intent = new Intent(PostDetailActivity.this, AddPostActivity.class);
+                        intent.putExtra("key","editPost");
+                        intent.putExtra("editPostId",postId);
+                        startActivity(intent);
+                    }
+
+                    return false;
+                }
+            });
+
+
+        }else{
+            Toast.makeText(this, "버전이 낮아 이용 불가능합니다. 안드로이드 키켓이상 지원", Toast.LENGTH_SHORT).show();
+        }
+
+
+    }
+
+    //*삭제, 수정 (구현 완벽 x )
+    private void beginDelete() {
+        deleteWithImage(postId, pImage);
+    }
+
+    //*삭제, 수정 (구현 완벽 x )
+    private void deleteWithImage(final String postId, String pImage) {
+        //progres bar
+        final ProgressDialog pd = new ProgressDialog(this);
+        pd.setMessage("삭제하는 중");
+        /*
+        * Step :
+        * 1. image를 url이용해서 삭제
+        * 2. post id로 database에서 삭제
+        * */
+
+        StorageReference picRef = FirebaseStorage.getInstance().getReferenceFromUrl(pImage);
+        picRef.delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        //이미지가 성공적으로 삭제되면
+                        Query fquery = FirebaseDatabase.getInstance().getReference("Posts").orderByChild("pId").equalTo(postId);
+                        fquery.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                for(DataSnapshot ds : snapshot.getChildren()){
+                                    ds.getRef().removeValue(); // pid가 일치하는 파이어베이스 저장소에서 삭제
+                                }
+                                //삭제되면
+                                Toast.makeText(PostDetailActivity.this, "성공적으로 삭제했습니다.", Toast.LENGTH_SHORT).show();
+                                pd.dismiss();
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        //삭제실패하면 더이상 진행못함.
+                        Toast.makeText(PostDetailActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+
+
+    }
+
+
+
+
+
+
+
+
 
     @Override
     public boolean onSupportNavigateUp() {

@@ -44,10 +44,12 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         //Actionbar and its title
+        // 액션바 설정
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("Create Account");
 
         //enable back button
+        // 뒤로가기 버튼 활성화
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
 
@@ -58,6 +60,7 @@ public class RegisterActivity extends AppCompatActivity {
         mHaveAccountTv = findViewById(R.id.have_accountTv);
 
         // Initialize Firebase Auth
+        // 파이어베이스 auth 초기화
         mAuth = FirebaseAuth.getInstance();
 
 
@@ -65,6 +68,7 @@ public class RegisterActivity extends AppCompatActivity {
         progressDialog.setMessage("회원가입 처리 중입니다.");
 
         //handle register btn click
+        // 회원가입 버튼 누르면
         mRegisterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,13 +76,16 @@ public class RegisterActivity extends AppCompatActivity {
                 String email = mEmailEt.getText().toString().trim();
                 String password = mPasswordEdit.getText().toString().trim();
                 //validate
+                //유효성검사
                 if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
                     //set error and focuss to email edit  text
+                    // 유효한 이메일 주소인지 확인
                     mEmailEt.setError("유효하지 않은 이메일 주소입니다.");
                     mEmailEt.setFocusable(true);
                 }
                 else if(password.length()<6){
                     //set error and focuss to password et
+                    // 비밀번호 글자수 확인
                     mPasswordEdit.setError("비밀번호는 최소 6글자 이상이여야 합니다.");
                     mPasswordEdit.setFocusable(true);
                 }
@@ -90,6 +97,7 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
         //handle login texview click listener
+        // 로그인할지
         mHaveAccountTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,15 +112,17 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
 
-    //나중에 지우고 테스트 해보기 #######
+
     @Override
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null)
+        // 사용자가 이미 로그인되어있다면,
         FirebaseUser currentUser = mAuth.getCurrentUser();
     }
 
 
+    //회원가입
     private void registerUser(String email, String password) {
         // 이메일과 비밀번호가 유효한다면, progress dialog를 보여주고 사용자 등록을 시작한다.
         progressDialog.show();
@@ -131,6 +141,7 @@ public class RegisterActivity extends AppCompatActivity {
                             String uid = user.getUid();
                             //when user is registered store user info in firebase realtime database too
                             // using HASH MAP
+                            // hash맵을 이용하여 회원가입 정보 firebase 저장소에 업로드
                             HashMap<Object, String> hashMap = new HashMap<>();
                             // put info in hashmap 해시맵을 사용해서 사용자 정보 담기
                             hashMap.put("email",email);
@@ -142,10 +153,13 @@ public class RegisterActivity extends AppCompatActivity {
                             hashMap.put("field","");
                             hashMap.put("cover",""); //커버사진
                             //firebase database instance
+                            // 파이어베이스 인스턴스 가져오기
                             FirebaseDatabase database = FirebaseDatabase.getInstance();
                             //path to store user data named "Users"
+                            // DB Users 를 경로로 설정하고
                             DatabaseReference reference = database.getReference("Users");
                             //put data within hashmap in database
+                            // hashmap집어넣기
                             reference.child(uid).setValue(hashMap);
 
 
@@ -156,7 +170,8 @@ public class RegisterActivity extends AppCompatActivity {
                             startActivity(new Intent(RegisterActivity.this, DashboardActivity.class));
                             finish();
                         } else {
-                            // If sign in fails, display a message to the user.
+                            // If sign up fails, display a message to the user.
+                            // 회원가입 실패시
                             progressDialog.dismiss();
                             Toast.makeText(RegisterActivity.this, "Authentication failed.",Toast.LENGTH_SHORT).show();
 
@@ -167,6 +182,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 //error, dismiss progress dialog and get and show the error message
+                // 에러발생시
                 progressDialog.dismiss();
                 Toast.makeText(RegisterActivity.this, ""+e.getMessage(),
                         Toast.LENGTH_SHORT).show();

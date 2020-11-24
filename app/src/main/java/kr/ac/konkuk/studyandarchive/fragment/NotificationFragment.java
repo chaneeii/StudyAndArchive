@@ -79,8 +79,6 @@ public class NotificationFragment extends Fragment {
    private void readNotifications() {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Notifications").child(firebaseUser.getUid());
-
-       Log.d(TAG, "알림. 나는 누구? "+firebaseUser.getUid());
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -92,7 +90,6 @@ public class NotificationFragment extends Fragment {
                 Collections.reverse(notificationList);
                 notificationAdapter.notifyDataSetChanged();
 
-//                recyclerView.setAdapter(notificationAdapter);
             }
 
             @Override

@@ -64,17 +64,11 @@ public class UsersFragment extends Fragment {
         //firebase
         firebaseAuth = FirebaseAuth.getInstance();
 
-        // init recycler view
+        // Recyclerview 등록
         recyclerView = view.findViewById(R.id.users_recyclerView);
-        //set it's properties
         recyclerView.setHasFixedSize(true);
-
-//        mLayoutManager = new LinearLayoutManager(getActivity());
-//        recyclerView.setLayoutManager(mLayoutManager);
-
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()) );
 
         //init user list
         userList = new ArrayList<>();
@@ -82,14 +76,14 @@ public class UsersFragment extends Fragment {
         //get all uers
         getAllUsers();
 
-
         return view;
     }
 
+    //전체 사용자 가져와서 보여주기
     private void getAllUsers() {
-        //get current user
+        //get current user 현재사용자 가져오기
         final FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
-        //get path of database named "Users" containing users info
+        //get path of database named "Users" containing users info /  User 테이블에 접근
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
         //get all data from path
         ref.addValueEventListener(new ValueEventListener() {
@@ -104,12 +98,10 @@ public class UsersFragment extends Fragment {
                     if(!modelUser.getUid().equals(fUser.getUid())){
                         userList.add(modelUser);
                     }
-                    //adapter
+                    //adapter & set adapter to recycler view
+                    // 뷰에 뿌리기
                     adapterUsers = new AdapterUsers(getActivity(), userList, true);
-                    //set adapter to recycler view
                     recyclerView.setAdapter(adapterUsers);
-//                    Log.d(TAG, "onDataChange: "+userList);
-
 
                 }
             }
@@ -121,11 +113,14 @@ public class UsersFragment extends Fragment {
         });
     }
 
+    //유저 검색
     private void searchUsers(final String query) {
 
         //get current user
+        /// 현재 사용자 가져오기
         final FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
         //get path of database named "Users" containing users info
+        // firebase의 user테이블에 접근
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
         //get all data from path
         ref.addValueEventListener(new ValueEventListener() {
@@ -171,6 +166,7 @@ public class UsersFragment extends Fragment {
         });
     }
 
+    //사용자 상태 확인
     private  void checkUserStatus(){
 
         //get current user
@@ -196,7 +192,9 @@ public class UsersFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-    /*inflate option menu*/
+
+
+    /*inflate option menu SEARCH VIEW 검색창 */
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         //검색아이콘 하나로 보이게
@@ -204,8 +202,6 @@ public class UsersFragment extends Fragment {
         //inflating menu
         inflater.inflate(R.menu.menu_main, menu);
         super.onCreateOptionsMenu(menu, inflater);
-
-
 
 
 
@@ -252,7 +248,7 @@ public class UsersFragment extends Fragment {
 
 
 
-    /*Handle menu item clicks*/
+    /*Handle menu item clicks 메뉴아이템 클릭*/
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 

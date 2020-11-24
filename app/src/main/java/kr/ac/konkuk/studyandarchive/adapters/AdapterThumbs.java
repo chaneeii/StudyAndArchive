@@ -58,7 +58,6 @@ public class AdapterThumbs extends RecyclerView.Adapter<AdapterThumbs.MyHolder> 
 
         //포스트 이미지 설정
         try{
-//            Picasso.get().load(post.getpImage()).placeholder(R.drawable.test_image).into(myHolder.post_image);
             Picasso.get().load(pImage).placeholder(R.drawable.test_image).into(myHolder.post_image);
         }catch (Exception e){
 

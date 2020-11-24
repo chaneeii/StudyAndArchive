@@ -86,7 +86,7 @@ public class AdapterComments extends RecyclerView.Adapter<AdapterComments.MyHold
 
         }
 
-        //comment 클리리스너
+        //comment 클릭리스너
         myHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -133,6 +133,7 @@ public class AdapterComments extends RecyclerView.Adapter<AdapterComments.MyHold
 
     }
 
+    //댓글삭제
     private void deleteComment(String cid) {
         final DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts").child(postId); // 해당 포스트 가져오기
         ref.child("Comments").child(cid).removeValue(); // 댓글 삭제

@@ -81,6 +81,8 @@ public class FollowersActivity extends AppCompatActivity {
 
     }
 
+
+    //좋아요 리스트 : Likes 테이블에서 해당 게시글id 리스트에서 해당 내용 출력
     private void getLikes() {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Likes")
                 .child(id);
@@ -101,6 +103,8 @@ public class FollowersActivity extends AppCompatActivity {
         });
     }
 
+
+    // 팔로잉 리스트, 해당 id의 following 정보를 idList에 담아서 해당 사용자 리스트 출려
     private void getFollowing() {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Follow")
                 .child(id).child("following");
@@ -121,6 +125,7 @@ public class FollowersActivity extends AppCompatActivity {
         });
     }
 
+    //follow테이블에서 follwers들의 id를 idList에 추가
     private void getFollowers() {
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Follow")
@@ -143,6 +148,7 @@ public class FollowersActivity extends AppCompatActivity {
 
     }
 
+    // Users table 에서 idList에서 userList의 id와 일치하는 경우 해당 유저 출력
     private void showUsers(){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
         reference.addListenerForSingleValueEvent(new ValueEventListener() {

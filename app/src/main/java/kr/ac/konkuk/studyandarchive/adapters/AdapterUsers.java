@@ -96,7 +96,7 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder>{
         isFollowing(user.getUid(), myHolder.btn_folllow);
 
         
-        //handle item click
+        //handle item click 각 row를 클릭하면 해당 유저페이지로 이동
         myHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -117,6 +117,7 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder>{
             }
         });
 
+        // 팔로우 여부 반영, 팔로우안한경우 추가 언팔인 경우 삭제
         myHolder.btn_folllow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -145,7 +146,8 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder>{
 
     }
 
-    //알림
+    //알림 , 새로운 팔로우 알림을 Notification에 추가
+
     private void addNotifications(String userid){
 
         if( userid != firebaseUser.getUid()){
@@ -191,6 +193,7 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder>{
         }
     }
 
+    //팔로우 여부체크
     private void isFollowing(final String userid, final Button button){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
                 .child("Follow").child(firebaseUser.getUid()).child("following");

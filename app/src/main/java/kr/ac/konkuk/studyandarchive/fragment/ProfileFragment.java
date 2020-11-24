@@ -217,69 +217,14 @@ public class ProfileFragment extends Fragment {
 
 
 
-        Log.d(TAG, "누가주인? "+profileid);
-
-
-
-        /*
-        * 현재 로그인된 유저의 정보를 email 을 통해 가져온다. (uid도 가능)
-        * orderByChild 쿼리를 사용해서, 현재 로그인된 사용자의 email(key로 사용) 과 동일한 이메일을 가진 node의 디테일을 보여줌
-        * 이것은 모든 노드를 돌며 key에 맞는 노드 찾음.
-        * */
-//        Query query = databaseReference.orderByChild("email").equalTo(user.getEmail());
-//        query.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//
-//                //check until required data get
-//                for (DataSnapshot ds : dataSnapshot.getChildren()){
-//                    //get data
-//                    String name = ""+ds.child("name").getValue();
-//                    String email = ""+ds.child("email").getValue();
-//                    String field = ""+ds.child("field").getValue();
-//                    String image = ""+ds.child("image").getValue();
-//                    String cover = ""+ds.child("cover").getValue();
-//
-//                    //set data
-//                    nameTV.setText(name);
-////                    emailTv.setText(email);
-//                    fieldTv.setText(field);
-//                    try{
-//                        //if image is received then set
-//                        Picasso.get().load(image).into(avatarIv);
-//                    }catch(Exception e){
-//                        //if there is any exception while getting image then set default
-//                        Picasso.get().load(R.drawable.ic_default_img_white).into(avatarIv);
-//                    }
-//                    try{
-//                        //if image is received then set
-//                        Picasso.get().load(cover).into(coverIv);
-//                    }catch(Exception e){
-//                        //if there is any exception while getting image then set default
-////                        Picasso.get().load(R.drawable.ic_default_img_white).into(coverIv);
-//                    }
-//
-//
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-
-
         userInfo(); // sharedpreference로 받은 profile id 에 맞는 정보 출력
         getFollowers(); //팔로워팔로잉텍스트뷰 세팅
-//        getNrPosts(); //전체 포스트 개수 세팅
         myThumbs();
         myRecords();
 
 
-
-
+        // 현재 사용자의 페이지 - > 팔로우버튼 없고, fab 있어서 프로필수정가능
+        // 나 이외의 사용자의 페이지 - > 팔로우버튼으로 팔로우 가능
         if(profileid.equals(user.getUid())){
             followBtn.setVisibility(View.GONE);
         }else{
@@ -287,13 +232,13 @@ public class ProfileFragment extends Fragment {
             fab.setVisibility(View.GONE);
         }
 
-
         //팔로우 버튼
         followBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String btn = followBtn.getText().toString();
 
+                // 팔로우/팔로잉 테이블에 사용자이름으로 등록
                 if(btn.equals("follow")){
                     FirebaseDatabase.getInstance().getReference().child("Follow").child(user.getUid())
                             .child("following").child(profileid).setValue(true);
@@ -319,6 +264,7 @@ public class ProfileFragment extends Fragment {
         });
 
 
+        //팔로워 가져옴
         followers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -330,6 +276,7 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        //팔로잉하는 유저 가져옴
         following.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -373,44 +320,6 @@ public class ProfileFragment extends Fragment {
 
 
 
-
-    //checkFollow와 역할 겹침
-    private void isFollowing(final String userid, final Button button){
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
-                .child("Follow").child(user.getUid()).child("following");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.child(userid).exists()){
-                    button.setText("FOLLOWING");
-                }else{
-                    button.setText("+ FOLLOW");
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
-
-
-    //알림
-    private void addNotifications(){
-        if( profileid != user.getUid()){
-            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Notifications").child(profileid);
-
-            HashMap<String, Object> hashMap = new HashMap<>();
-            hashMap.put("userid", user.getUid() );
-            hashMap.put("text", "님이 사용자님을 팔로우하기 시작했습니다.");
-            hashMap.put("postid","");
-            hashMap.put("ispost",false);
-
-            reference.push().setValue(hashMap);
-        }
-
-    }
 
 
 
@@ -467,27 +376,7 @@ public class ProfileFragment extends Fragment {
 
     }
 
-
-    private void checkFollow(){
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
-                .child("Follow").child(user.getUid()).child("following");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.child(profileid).exists()){
-                    followBtn.setText("following");
-                }else{
-                    followBtn.setText("follow");
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
-
+    //팔로워 가져오기
     private void getFollowers(){
 
         Log.d(TAG, "getFollowers: "+profileid);
@@ -520,31 +409,45 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-//    private void getNrPosts(){
-//        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts");
-//        reference.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                int i = 0;
-//                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
-//                    ModelPost post = snapshot.getValue(ModelPost.class);
-////                    String currentUid = post.getpUid();
-////                    hisUid = ""+ dataSnapshot.child("uid").getValue();
-//                    if(post.getUid().equals(profileid)){
-//                        i++;
-//                    }
-//                }
-//
-//                posts.setText(""+i);
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-//    }
+
+    // 현재 사용자 팔로우하는지 여부 (만약 내프로필이면 필요x)
+    private void checkFollow(){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
+                .child("Follow").child(user.getUid()).child("following");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.child(profileid).exists()){
+                    followBtn.setText("following");
+                }else{
+                    followBtn.setText("follow");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+
+    //알림
+    private void addNotifications(){
+        if( profileid != user.getUid()){
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Notifications").child(profileid);
+
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("userid", user.getUid() );
+            hashMap.put("text", "님이 사용자님을 팔로우하기 시작했습니다.");
+            hashMap.put("postid","");
+            hashMap.put("ispost",false);
+
+            reference.push().setValue(hashMap);
+        }
+
+    }
+
 
     private void myThumbs(){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts");
@@ -666,74 +569,8 @@ public class ProfileFragment extends Fragment {
 
     }
 
-    private void calc_level(long result) {
-
-        int h   = (int)(result/3600000);
-
-        if(h>=10 && h<50){ //lv2
-
-            plantIv.setImageResource(R.drawable.lv2);
-            levelTv.setText("LV. 2");
-
-        }else if(h>=50 && h<100){ //lv3
-
-            plantIv.setImageResource(R.drawable.lv3);
-            levelTv.setText("LV. 3");
-
-        }else if(h<200 && h>=100){ //lv4
-
-            plantIv.setImageResource(R.drawable.lv4);
-            levelTv.setText("LV. 4");
-
-        }else if(h>=200){ //lv5
-
-            plantIv.setImageResource(R.drawable.lv5);
-            levelTv.setText("LV. 5");
-
-        }else{ //lv0
-
-            plantIv.setImageResource(R.drawable.lv1);
-            levelTv.setText("LV. 1");
-        }
 
 
-    }
-
-
-    // STORAGE PERMISSION
-    private boolean checkStoragePermission(){
-        /*
-        * storage 권한 체크
-        * return true : 가능
-        * return false : 불가능
-        * */
-        boolean result = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                == (PackageManager.PERMISSION_GRANTED);
-        return result;
-    }
-    private void requestStoragePermission(){
-        //request runtime storage permission
-        requestPermissions(storagePermissions, STORAGE_REQUEST_CODE);
-    }
-
-    // CAMERA PERMISSION
-    private boolean checkCameraPermission(){
-        /*
-         * storage 권한 체크
-         * return true : 가능
-         * return false : 불가능
-         * */
-        boolean result = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
-                == (PackageManager.PERMISSION_GRANTED);
-
-        boolean result1 = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                == (PackageManager.PERMISSION_GRANTED);
-        return result && result1 ;
-    }
-    private void requestCameraPermission(){
-        //request runtime storage permission
-        requestPermissions(cameraPermissions, CAMERA_REQUEST_CODE);
-    }
 
 
     // 프로필 정보 수정시 *** 옵션
@@ -792,7 +629,133 @@ public class ProfileFragment extends Fragment {
 
     }
 
-    //리스트스타일
+
+
+
+    // 이름 업데이트시 호출
+    private void showTextUpdateDialog(final String key) {
+        /*
+        * key는 db의 어느 필드를 바꿀지 해당 키를 의미함. ex. key 가 name이면 name필드의 값 변경
+        * */
+
+        //custom dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+
+        builder.setTitle("Update" + key);
+
+
+        //edit text 추가
+        final EditText editText = new EditText(getActivity());
+        editText.setHint("사용하시려는 "+key+"을 입력하세요");
+
+        builder.setView(editText);
+
+        //add buttons in Dialog
+        builder.setPositiveButton("업데이트", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // edit text로 부터 text input하기
+                final String value = editText.getText().toString().trim();
+                // 사용자가 인풋을 입ㄺ햇는지 아닌지 체크
+                if(!TextUtils.isEmpty(value)){
+                    pd.show();
+                    HashMap<String, Object> result = new HashMap<>();
+                    result.put(key, value);
+
+                    databaseReference.child(user.getUid()).updateChildren(result)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    // 업데이트 됨
+                                    pd.dismiss();
+                                    Toast.makeText(getActivity(), "업데이트 되었습니다.", Toast.LENGTH_SHORT).show();
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    // 업데이트 실패
+                                    pd.dismiss();
+                                    Toast.makeText(getActivity(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                                }
+                            });
+
+                    //만약 사용자가 이름을 바꾸면, 과거 포스트에도 변경된 이름을 적용할수있도록 함 (아직제대로 구현안됨)
+                    if(key.equals("name")){
+                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts");
+                        Query query = ref.orderByChild("uid").equalTo(user.getUid());
+                        query.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                for(DataSnapshot ds : snapshot.getChildren()){
+                                    String child = ds.getKey();
+                                    snapshot.getRef().child(child).child("uName").setValue(value);
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+
+                    }
+                    //만약 사용자가 이름을 바꾸면, 과거 댓글에도 변경된 이름을 적용할수있도록 함 (아직제대로 구현안됨)
+                    databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for(DataSnapshot ds : snapshot.getChildren()){
+                                String child = ds.getKey();
+                                if (snapshot.child(child).hasChild("Comments")){
+                                    String child1 = ""+snapshot.child(child).getKey();
+                                    Query child2 = FirebaseDatabase.getInstance().getReference("Posts").child(child1).child("Comments").orderByChild("uid").equalTo(user.getUid());
+                                    child2.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            for (DataSnapshot ds : snapshot.getChildren()){
+                                                String child = ds.getKey();
+                                                snapshot.getRef().child(child).child("uName").setValue(value);
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                        }
+                                    });
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+
+
+
+                }
+                else{
+                    Toast.makeText(getActivity(), "입력해주세요", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        builder.setNegativeButton("취소하기", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        // create and show dialog
+        builder.create().show();
+   }
+
+
+    //학습분야 업데이트시 호출 - 리스트스타일
     private void showFieldOfStudyUpdateDialog() {
 
         AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
@@ -857,7 +820,7 @@ public class ProfileFragment extends Fragment {
 
     }
 
-    // 드랍다운스타일
+    // 학습분야 업데이트시 호출 - 드랍다운스타일 -메뉴 (더이상 사용안함, 사용성 떨어짐)
     private void showFieldUpdateDialog() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -930,135 +893,7 @@ public class ProfileFragment extends Fragment {
     }
 
 
-
-
-    private void showTextUpdateDialog(final String key) {
-        /*
-        * key는 db의 어느 필드를 바꿀지 해당 키를 의미함. ex. key 가 name이면 name필드의 값 변경
-        * */
-
-        //custom dialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-
-        builder.setTitle("Update" + key);
-
-
-        // layout 설정
-//        LinearLayout linearLayout = new LinearLayout(getActivity());
-//        linearLayout.setOrientation(LinearLayout.VERTICAL);
-//        linearLayout.setPadding(10,10,10,10);
-
-        //edit text 추가
-        final EditText editText = new EditText(getActivity());
-        editText.setHint("사용하시려는 "+key+"을 입력하세요");
-
-        builder.setView(editText);
-
-        //add buttons in Dialog
-        builder.setPositiveButton("업데이트", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // edit text로 부터 text input하기
-                final String value = editText.getText().toString().trim();
-                // 사용자가 인풋을 입ㄺ햇는지 아닌지 체크
-                if(!TextUtils.isEmpty(value)){
-                    pd.show();
-                    HashMap<String, Object> result = new HashMap<>();
-                    result.put(key, value);
-
-                    databaseReference.child(user.getUid()).updateChildren(result)
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    // 업데이트 됨
-                                    pd.dismiss();
-                                    Toast.makeText(getActivity(), "업데이트 되었습니다.", Toast.LENGTH_SHORT).show();
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    // 업데이트 실패
-                                    pd.dismiss();
-                                    Toast.makeText(getActivity(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-
-                                }
-                            });
-
-                    //만약 사용자가 이름을 바꾸면, 이것은 과거 포스트에도 변경된 이름을 적용할수있도록 함
-                    if(key.equals("name")){
-                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts");
-                        Query query = ref.orderByChild("uid").equalTo(user.getUid());
-                        query.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                for(DataSnapshot ds : snapshot.getChildren()){
-                                    String child = ds.getKey();
-                                    snapshot.getRef().child(child).child("uName").setValue(value);
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
-
-                    }
-                    //만약 사용자가 이름을 바꾸면, 이것은 과거 댓글에도 변경된 이름을 적용할수있도록 함
-                    databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            for(DataSnapshot ds : snapshot.getChildren()){
-                                String child = ds.getKey();
-                                if (snapshot.child(child).hasChild("Comments")){
-                                    String child1 = ""+snapshot.child(child).getKey();
-                                    Query child2 = FirebaseDatabase.getInstance().getReference("Posts").child(child1).child("Comments").orderByChild("uid").equalTo(user.getUid());
-                                    child2.addValueEventListener(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                            for (DataSnapshot ds : snapshot.getChildren()){
-                                                String child = ds.getKey();
-                                                snapshot.getRef().child(child).child("uName").setValue(value);
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError error) {
-
-                                        }
-                                    });
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-
-
-
-
-                }
-                else{
-                    Toast.makeText(getActivity(), "입력해주세요", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        builder.setNegativeButton("취소하기", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        // create and show dialog
-        builder.create().show();
-   }
-
-
+   // 카메라, 갤러리 (프로필사진, 커버 수정시 콜)
     private void showImagePicDialog() {
         // 카메라와 갤러리 선택이 가능한 다이얼로그 show
         // 카메라 : 카메라 & storage 퍼미션필요
@@ -1102,10 +937,46 @@ public class ProfileFragment extends Fragment {
     }
 
 
+    // STORAGE PERMISSION
+    private boolean checkStoragePermission(){
+        /*
+         * storage 권한 체크
+         * return true : 가능
+         * return false : 불가능
+         * */
+        boolean result = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == (PackageManager.PERMISSION_GRANTED);
+        return result;
+    }
+    private void requestStoragePermission(){
+        //request runtime storage permission
+        requestPermissions(storagePermissions, STORAGE_REQUEST_CODE);
+    }
+
+    // CAMERA PERMISSION
+    private boolean checkCameraPermission(){
+        /*
+         * storage 권한 체크
+         * return true : 가능
+         * return false : 불가능
+         * */
+        boolean result = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
+                == (PackageManager.PERMISSION_GRANTED);
+
+        boolean result1 = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == (PackageManager.PERMISSION_GRANTED);
+        return result && result1 ;
+    }
+    private void requestCameraPermission(){
+        //request runtime storage permission
+        requestPermissions(cameraPermissions, CAMERA_REQUEST_CODE);
+    }
+
+
+    /* 이 메소드는private void requestCameraPermission() 사용자가 퍼비션 리퀘스트 다이얼로그에 허락하거나 거부하면 호출되어 각 경우를 핸들링함. */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        /* 이 메소드는 사용자가 퍼비션 리퀘스트 다이얼로그에 허락하거나 거부하면 호출되어 각 경우를 핸들링함.
-        * */
+
 
         switch (requestCode){
             case CAMERA_REQUEST_CODE: {
@@ -1142,6 +1013,7 @@ public class ProfileFragment extends Fragment {
 //        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
+    // 카메라나 갤러리에서 이미지 선택후 호출됨
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         // 카메라나 갤러리에서 이미지 선택후 호출됨
@@ -1171,7 +1043,7 @@ public class ProfileFragment extends Fragment {
         pd.show();
 
 
-        /* 프로필 사진과 커버사진을 위해 각자 함수 만드는 대신 , 한개를 같이 사용하겟다.
+        /* 프로필 사진과 커버사진을 위해 각자 함수 만드는 대신 , 한개를 같이 사용
         * to add check ill, string 변수를 더하고
         * 사용자가 "프로필 사진 변경" 클릭시"image"라는 value가지고
         * " 커버 사진 변경" 클릭시 "cover" 라는 value 가짐.
@@ -1286,8 +1158,6 @@ public class ProfileFragment extends Fragment {
         }
 
     }
-
-
 
 
 

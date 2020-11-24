@@ -31,22 +31,15 @@ import kr.ac.konkuk.studyandarchive.models.ModelPost;
 
 public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
 
-
+// onBindViewHolder로 row_posts 에 뷰를 바인딩해줘 HomeFragment 리사이클러뷰에 각 포스트 보여쥼
 
     Context context;
     List<ModelPost> postList;
 
-    // LIKES 디비 node
-    private DatabaseReference likeRef;
-    private DatabaseReference postRef; //post reference
-
-    boolean mProcessLike = false;
 
     public AdapterPosts(Context context, List<ModelPost> postList) {
         this.context = context;
         this.postList = postList;
-        likeRef = FirebaseDatabase.getInstance().getReference().child("Likes");
-        postRef = FirebaseDatabase.getInstance().getReference().child("Posts");
     }
 
     // view holder class
@@ -87,26 +80,15 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
     public void onBindViewHolder(@NonNull MyHolder myHolder, int i) {
 
         //get data
-        String uid = postList.get(i).getUid();
+
         String uName = postList.get(i).getuName();
         String uField = postList.get(i).getuField();
-        String uDp = postList.get(i).getuDp();
         final String pId = postList.get(i).getpId();
-        String pDescription = postList.get(i).getpDescription();
         String pTitle = postList.get(i).getpTitle();
         String pImage = postList.get(i).getpImage();
         String pStudyTime = postList.get(i).getpStudyTime();
-        String pTimeStamp = postList.get(i).getpTime();
-        String pUrl = postList.get(i).getpUrl();
-        String pComments = postList.get(i).getpComments();
-        String pLikes = postList.get(i).getpLikes();
 
 
-
-        //timestamp 변환 yyyy/mm/dd hh:mm am/pm
-//        Calendar calendar = Calendar.getInstance(Locale.getDefault());
-//        calendar.setTimeInMillis(Long.parseLong(pTimeStamp));
-//        String pTime = DateFormat.format("yyyy/MM/dd hh:mm aa", calendar).toString();
 
         long time = Long.parseLong(pStudyTime);
 
@@ -132,13 +114,6 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         }catch (Exception e){
 
         }
-
-        /*사용자 프로필 설정
-        try{
-            Picasso.get().load(uDp).placeholder(R.drawable.ic_default_img_purple).into(myHolder.uPictureIv);
-        }catch (Exception e){
-
-        }*/
 
 
         // button click handlers

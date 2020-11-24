@@ -146,34 +146,6 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    private void loadPosts_all() {
-        // path of 모든 포스트
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts");
-        //ref애서 데이터 가져오기
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                postList.clear();
-                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    ModelPost post =snapshot.getValue(ModelPost.class);
-
-                    postList.add(post);
-                    Log.d(TAG, "onDataChange: "+post);
-
-                    //어댑터
-                    adapterPosts = new AdapterPosts(getContext(), postList);
-                    //리사이클러뷰
-                    recyclerView.setAdapter(adapterPosts);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                //에러난 경우
-//                Toast.makeText(getActivity(), ""+error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
 
 
 

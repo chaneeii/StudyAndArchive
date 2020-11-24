@@ -71,6 +71,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
         //login button click
+        //로그인 버튼
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,6 +92,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
         //go to Sign Up
+        //회원가입하러가기
         notHaveAccountTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -125,8 +127,10 @@ public class LoginActivity extends AppCompatActivity {
             다이얼로그 레이아웃
          */
         //set layout linear layout
+        // 리니어 레리아웃의 다이얼로그
         LinearLayout linearLayout = new LinearLayout(this);
         //views to set in dialog
+        //다이얼로그 설정
         final EditText emailEt = new EditText(this);
         emailEt.setHint("Email");
         emailEt.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
@@ -205,14 +209,14 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             //dissmiss progress dialog
                             pd.dismiss();
-                            // Sign in success, update UI with the signed-in user's information
+                            // 성공시 사용자 정보로 ui 업데이트, 액티비티 전환
                             FirebaseUser user = mAuth.getCurrentUser();
                             startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
                             finish();
                         } else {
                             //dissmiss progress dialog
                             pd.dismiss();
-                            // If sign in fails, display a message to the user.
+                            // 실패시
                             Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -221,7 +225,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onFailure(@NonNull Exception e) {
                 //dissmiss progress dialog
                 pd.dismiss();
-                //error, get and show error message
+                //에러메세지출력
                 Toast.makeText(LoginActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });

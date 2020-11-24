@@ -16,13 +16,14 @@ public class StartActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_start);
 
         //init views
         mRegisterBtn = findViewById(R.id.register_btn);
         mLoginBtn = findViewById(R.id.login_btn);
 
         // handle register button click
+        //회원가입 버튼
         mRegisterBtn.setOnClickListener(new View.OnClickListener(){
 
             @Override
@@ -34,6 +35,7 @@ public class StartActivity extends AppCompatActivity {
         });
 
         //handle login button click
+        //로그인버튼
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

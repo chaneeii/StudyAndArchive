@@ -42,7 +42,6 @@ public class DashboardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_dashboard);
 
 
-
         //firebase
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -50,59 +49,49 @@ public class DashboardActivity extends AppCompatActivity {
 
 
         //Actionbar and its title
+        // 액션바와 타이틀
         actionBar = getSupportActionBar();
         actionBar.setTitle("Profile");
-//        getSupportActionBar().setDisplayShowTitleEnabled(false); // 기본 타이틀 사용 안함
-//        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM); // 커스텀 사용
-//        getSupportActionBar().setCustomView(R.layout.actionbar_custom); // 커스텀 사용할 파일 위치
-//        setTitle("Profile");
 
         //bottom naviation
+        // 하단 네이게이션바
         BottomNavigationView navigationView = findViewById(R.id.navigation);
         navigationView.setOnNavigationItemSelectedListener(selectedListener);
 
 
-        //home fragment transaction (default, on start)
-//        actionBar.setTitle("study&archive"); // actionbar 타이틀 바꾸기
-        actionBar.setTitle("study&archive");
         HomeFragment fragment1 = new HomeFragment();
         FragmentTransaction ft1 = getSupportFragmentManager().beginTransaction();
         ft1.replace(R.id.container, fragment1, "");
         ft1.commit();
 
 
-
     }
 
-    // nav bar listener
+    /* NAVIGATIONBAR */
     private BottomNavigationView.OnNavigationItemSelectedListener selectedListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
 
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                     //handle item clicks
-                    switch (menuItem.getItemId()){
+                    switch (menuItem.getItemId()) {
                         case R.id.nav_home:
                             //home fragment transaction
                             actionBar.setTitle("study&archive"); // actionbar 타이틀 바꾸기
                             selectedFragment = new HomeFragment();
                             FragmentTransaction ft1 = getSupportFragmentManager().beginTransaction();
-                            ft1.replace(R.id.container, selectedFragment , "");
+                            ft1.replace(R.id.container, selectedFragment, "");
                             ft1.commit();
                             return true;
+
                         case R.id.nav_profile:
                             //profile fragment transaction
                             actionBar.setTitle("Profile"); // actionbar 타이틀 바꾸기
                             SharedPreferences.Editor editor = getSharedPreferences("PREFS", Context.MODE_PRIVATE).edit();
                             editor.putString("profileid", FirebaseAuth.getInstance().getCurrentUser().getUid());
                             editor.apply();
-//                            ProfileFragment fragment2 = new ProfileFragment();
                             getSupportFragmentManager().beginTransaction().replace(R.id.container,
                                     new ProfileFragment()).commit();
-
-//                            FragmentTransaction ft2 = getSupportFragmentManager().beginTransaction();
-//                            ft2.replace(R.id.container, fragment2, "");
-//                            ft2.commit();
 
                             return true;
 
@@ -132,7 +121,7 @@ public class DashboardActivity extends AppCompatActivity {
                             return true;
                     }
 
-                    if (selectedFragment ==null){
+                    if (selectedFragment == null) {
 
                     }
 
@@ -141,7 +130,7 @@ public class DashboardActivity extends AppCompatActivity {
             };
 
 
-    private  void checkUserStatus(){
+    private void checkUserStatus(){
 
         FirebaseUser user = firebaseAuth.getCurrentUser();
 
@@ -173,7 +162,7 @@ public class DashboardActivity extends AppCompatActivity {
 
         if(user !=null){
             //user is signed in stay here
-            // 만약 로그인 되어있다면 홈보여주기
+            // 만약 로그인 되어있다면 여기잇기
 
 
         }else{
@@ -188,7 +177,7 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
 
-    /*inflate option menu*/
+    /* 옵션메뉴 */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -198,7 +187,7 @@ public class DashboardActivity extends AppCompatActivity {
 
     }
 
-    /*Handle menu item clicks*/
+    /* 메뉴아이템 클릭 */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
