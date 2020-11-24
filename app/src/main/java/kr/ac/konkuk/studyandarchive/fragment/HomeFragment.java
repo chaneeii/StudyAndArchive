@@ -80,15 +80,16 @@ public class HomeFragment extends Fragment {
         postList = new ArrayList<>();
 
 
-
-
         return  view;
     }
 
+
+    //팔로잉하는 사용자 가져오기
     private void checkFollowing(){
 
         followingList =  new ArrayList<>();
 
+        // follow 테이블에서 현재 로그인된 사용자의 팔로잉 리스트 가져와서 저장함.
         DatabaseReference reference =  FirebaseDatabase.getInstance().getReference("Follow")
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                 .child("following");
@@ -113,7 +114,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void loadPosts() {
-        // path of 모든 포스트
+        // path of 포스트
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts");
         //ref애서 데이터 가져오기
         ref.addValueEventListener(new ValueEventListener() {
@@ -123,6 +124,7 @@ public class HomeFragment extends Fragment {
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                     ModelPost post =snapshot.getValue(ModelPost.class);
                     for(String id : followingList){
+                        //팔로잉리스트에 잇으면 가져오기
                         if(post.getUid().equals(id)){
                             postList.add(post);
                             Log.d(TAG, "onDataChange: "+post);
@@ -144,7 +146,6 @@ public class HomeFragment extends Fragment {
         });
     }
 
-
     private void loadPosts_all() {
         // path of 모든 포스트
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts");
@@ -155,43 +156,6 @@ public class HomeFragment extends Fragment {
                 postList.clear();
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                     ModelPost post =snapshot.getValue(ModelPost.class);
-
-                            postList.add(post);
-                            Log.d(TAG, "onDataChange: "+post);
-
-                            //어댑터
-                            adapterPosts = new AdapterPosts(getContext(), postList);
-                            //리사이클러뷰
-                            recyclerView.setAdapter(adapterPosts);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                //에러난 경우
-//                Toast.makeText(getActivity(), ""+error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-
-
-
-    private  void searchPosts(final String searchQuery){
-        // path of 모든 포스트
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts");
-        //ref애서 데이터 가져오기
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                postList.clear();
-                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    ModelPost post =snapshot.getValue(ModelPost.class);
-
-                    if(!post.getpTitle().toLowerCase().contains(searchQuery.toLowerCase()) ||
-                            post.getpDescription().toLowerCase().contains(searchQuery.toLowerCase())){
-                        postList.add(post);
-                    }
 
                     postList.add(post);
                     Log.d(TAG, "onDataChange: "+post);
@@ -206,6 +170,44 @@ public class HomeFragment extends Fragment {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 //에러난 경우
+//                Toast.makeText(getActivity(), ""+error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+
+    private  void searchPosts(final String searchQuery){
+        // path of 모든 포스트
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts");
+        //ref애서 데이터 가져오기
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                postList.clear();
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    ModelPost post =snapshot.getValue(ModelPost.class);
+
+                    if(post.getpTitle().toLowerCase().contains(searchQuery.toLowerCase()) ||
+                            post.getpDescription().toLowerCase().contains(searchQuery.toLowerCase())){
+                        postList.add(post);
+                        Log.d(TAG, "게시글: "+post.getpTitle());
+                    }
+
+                }
+
+
+                //어댑터
+                adapterPosts = new AdapterPosts(getContext(), postList);
+                //리사이클러뷰
+                recyclerView.setAdapter(adapterPosts);
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                //에러난 경우
                 Toast.makeText(getActivity(), ""+error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -214,6 +216,8 @@ public class HomeFragment extends Fragment {
 
     }
 
+
+    //사용자가 로그인 되어있는지
     private  void checkUserStatus(){
 
         //get current user
@@ -222,7 +226,7 @@ public class HomeFragment extends Fragment {
         if(user !=null){
             //user is signed in stay here
             // 만약 로그인 되어있다면 홈보여주기
-            checkFollowing();
+            checkFollowing(); //팔로우하는 사용자 -> 포스트 최신순으로 로드
 
         }else{
             //user not signed in, go to main activity
@@ -233,13 +237,16 @@ public class HomeFragment extends Fragment {
 
     }
 
+
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true); // to show menu option in framgent
         super.onCreate(savedInstanceState);
     }
 
-    /*inflate option menu*/
+
+    /* inflate option menu SERACH */
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
@@ -257,10 +264,11 @@ public class HomeFragment extends Fragment {
             public boolean onQueryTextSubmit(String s) {
                 //사용자가 search buttton 누르면 호출됨
                 if(!TextUtils.isEmpty(s)){
-                    searchPosts(s);
+                    searchPosts(s); //타이핑한 내용으로 게시글 검색
                 }
                 else {
-                    checkFollowing();
+                    checkFollowing(); //팔로우하는 사용자 -> 포스트 최신순으로 로드
+
                 }
                 return false;
             }
@@ -269,10 +277,11 @@ public class HomeFragment extends Fragment {
             public boolean onQueryTextChange(String s) {
                 //사용자가 아무글자나 누르면 호출됨
                 if(!TextUtils.isEmpty(s)){
-                    searchPosts(s);
+                    searchPosts(s);  //타이핑한 내용으로 게시글 검색
                 }
                 else {
-                    checkFollowing();
+                    checkFollowing(); //팔로우하는 사용자 -> 포스트 최신순으로 로드
+
                 }
                 return false;
             }
