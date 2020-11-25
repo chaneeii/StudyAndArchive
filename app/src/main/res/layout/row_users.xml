@@ -81,7 +81,6 @@
             android:textColor="@color/colorPrimary"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:visibility="gone"
             android:layout_marginRight="8dp"
             />
     </RelativeLayout>
