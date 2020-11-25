@@ -28,7 +28,7 @@ import java.util.HashMap;
 public class RegisterActivity extends AppCompatActivity {
 
     //views
-    EditText mEmailEt, mPasswordEdit;
+    EditText mEmailEt, mPasswordEdit, mUsernameEdit;
     Button mRegisterBtn;
     TextView mHaveAccountTv;
 
@@ -58,6 +58,7 @@ public class RegisterActivity extends AppCompatActivity {
         mPasswordEdit = findViewById(R.id.passwordEt);
         mRegisterBtn = findViewById(R.id.registerBtn);
         mHaveAccountTv = findViewById(R.id.have_accountTv);
+        mUsernameEdit = findViewById(R.id.usernameEt);
 
         // Initialize Firebase Auth
         // 파이어베이스 auth 초기화
@@ -75,6 +76,7 @@ public class RegisterActivity extends AppCompatActivity {
                 //input email, password
                 String email = mEmailEt.getText().toString().trim();
                 String password = mPasswordEdit.getText().toString().trim();
+                String username = mUsernameEdit.getText().toString().trim();
                 //validate
                 //유효성검사
                 if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
@@ -90,7 +92,7 @@ public class RegisterActivity extends AppCompatActivity {
                     mPasswordEdit.setFocusable(true);
                 }
                 else {
-                    registerUser(email,password); //회원가입
+                    registerUser(email,password,username); //회원가입
                 }
 
             }
@@ -123,7 +125,7 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     //회원가입
-    private void registerUser(String email, String password) {
+    private void registerUser(String email, String password, final String username) {
         // 이메일과 비밀번호가 유효한다면, progress dialog를 보여주고 사용자 등록을 시작한다.
         progressDialog.show();
 
@@ -146,11 +148,11 @@ public class RegisterActivity extends AppCompatActivity {
                             // put info in hashmap 해시맵을 사용해서 사용자 정보 담기
                             hashMap.put("email",email);
                             hashMap.put("uid",uid);
-                            hashMap.put("name",""); // 나중에 추가할 예쩡
+                            hashMap.put("name",username); // 나중에 추가할 예쩡
                             hashMap.put("phone","");
-                            hashMap.put("image","");
+                            hashMap.put("image","https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRQEdoqnWbsHEyqwdFv4iUu5Ug5XpFZWFL5g&usqp=CAU");
                             hashMap.put("bio","");
-                            hashMap.put("field","");
+                            hashMap.put("field","설정안됨");
                             hashMap.put("cover",""); //커버사진
                             //firebase database instance
                             // 파이어베이스 인스턴스 가져오기

@@ -211,9 +211,9 @@ public class ProfileFragment extends Fragment {
 
 
 
-        recyclerView.setVisibility(View.VISIBLE);
-        recyclerView_study.setVisibility(View.GONE);
-        studyLayoutTop.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.GONE);
+        recyclerView_study.setVisibility(View.VISIBLE);
+        studyLayoutTop.setVisibility(View.VISIBLE);
 
 
 
@@ -295,8 +295,6 @@ public class ProfileFragment extends Fragment {
                 recyclerView.setVisibility(View.VISIBLE);
                 recyclerView_study.setVisibility(View.GONE);
                 studyLayoutTop.setVisibility(View.GONE);
-                archiveBtn.setTextColor(R.color.colorPrimaryDark);
-                studyBtn.setTextColor(Color.GRAY);
             }
         });
 
@@ -307,11 +305,8 @@ public class ProfileFragment extends Fragment {
                 recyclerView.setVisibility(View.GONE);
                 recyclerView_study.setVisibility(View.VISIBLE);
                 studyLayoutTop.setVisibility(View.VISIBLE);
-                studyBtn.setTextColor(R.color.colorPrimaryDark );
-                archiveBtn.setTextColor(Color.GRAY);
             }
         });
-
 
 
 

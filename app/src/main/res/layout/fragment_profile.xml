@@ -184,6 +184,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:id="@+id/my_study"
+                    android:text="study"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorPrimary"
+                    android:background="@color/colorWhite"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:id="@+id/my_archives"
                     android:text="archive"
                     android:textStyle="bold"
@@ -193,15 +203,7 @@
 <!--                    android:layout_width="1dp"-->
 <!--                    android:layout_height="match_parent"-->
 <!--                    android:background="#F5F5F0"/>-->
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:id="@+id/my_study"
-                    android:text="study"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorPrimary"
-                    android:background="@color/colorWhite"/>
+
             </LinearLayout>
             <View
                 android:layout_width="match_parent"
@@ -225,7 +227,7 @@
                 <LinearLayout
                     android:id="@+id/studyLayoutTop"
                     android:layout_width="match_parent"
-                    android:layout_height="250dp"
+                    android:layout_height="270dp"
                     android:orientation="vertical">
 
                     <TextView
@@ -235,7 +237,7 @@
                         android:textStyle="bold"
                         android:textSize="20sp"
                         android:gravity="center_horizontal"
-                        android:layout_marginTop="10dp"/>
+                        android:layout_marginTop="20dp"/>
 
                     <ImageView
                         android:id="@+id/plantImg"

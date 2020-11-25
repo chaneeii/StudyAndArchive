@@ -6,6 +6,7 @@
     <string name="follow">+ FOLLOW</string>
 
 
+    <string name="prompt">What are you studying?</string>
     <string-array name="fieldList">
         <item>고등학생</item>
         <item>N수</item>
