@@ -22,6 +22,7 @@ allprojects {
         //circular view
         maven { url 'https://jitpack.io' }
 
+
     }
 }
 

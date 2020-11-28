@@ -3,6 +3,7 @@ package kr.ac.konkuk.studyandarchive.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,7 +78,7 @@ public class AdapterNotifications extends RecyclerView.Adapter<AdapterNotificati
                 }else{
                     // 포스트 아닐때, 누르면 각 유저페이지로 이동
                     SharedPreferences.Editor editor = mContext.getSharedPreferences("PREFS", Context.MODE_PRIVATE).edit();
-                    editor.putString("profileid",notification.getPostid());
+                    editor.putString("profileid",notification.getUserid());
                     editor.apply();
 
                     ((FragmentActivity)mContext).getSupportFragmentManager().beginTransaction().replace(R.id.container,
@@ -127,10 +128,12 @@ public class AdapterNotifications extends RecyclerView.Adapter<AdapterNotificati
 //                String uImage = user.getImage();
                 try{
                         Picasso.get().load(user.getImage()).into(imageView);
+                        username.setText(user.getName());
                 }catch (Exception e){
                         Picasso.get().load(R.drawable.ic_default_img_white).into(imageView);
                 }
-                username.setText(user.getName());
+//                username.setText(user.getName());
+//                Log.d("tag", "onDataChange: " + user.getName());
             }
 
             @Override
