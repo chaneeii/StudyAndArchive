@@ -16,6 +16,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -130,6 +131,7 @@ public class ProfileFragment extends Fragment {
 
     String pStudyTime_s;
 
+    ActionBar actionBar;
 
 
 
@@ -230,6 +232,8 @@ public class ProfileFragment extends Fragment {
         }else{
             checkFollow();
             fab.setVisibility(View.GONE);
+            //액션바에서 뒤로가기 버튼 활성화
+
         }
 
         //팔로우 버튼
@@ -312,10 +316,6 @@ public class ProfileFragment extends Fragment {
 
         return view;
     }
-
-
-
-
 
 
     //shared reference로 받은 profileid에 해당하는 사용자 정보 세팅

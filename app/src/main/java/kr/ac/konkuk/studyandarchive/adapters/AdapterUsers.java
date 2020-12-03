@@ -106,7 +106,7 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder>{
                     editor.putString("profileid", user.getUid());
                     editor.apply();
                     ((FragmentActivity)context).getSupportFragmentManager().beginTransaction().replace(R.id.container,
-                            new ProfileFragment()).commit();
+                            new ProfileFragment()).addToBackStack(null).commit();
                 }else{
                     Intent intent = new Intent(context, DashboardActivity.class);
                     intent.putExtra("uid",user.getUid());

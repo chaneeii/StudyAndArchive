@@ -13,6 +13,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,6 +35,10 @@ public class DashboardActivity extends AppCompatActivity {
     ActionBar actionBar;
 
     Fragment selectedFragment = null;
+
+    private long lastTimeBackPressed;
+
+
 
 
     @Override
@@ -90,9 +95,12 @@ public class DashboardActivity extends AppCompatActivity {
                             SharedPreferences.Editor editor = getSharedPreferences("PREFS", Context.MODE_PRIVATE).edit();
                             editor.putString("profileid", FirebaseAuth.getInstance().getCurrentUser().getUid());
                             editor.apply();
-                            getSupportFragmentManager().beginTransaction().replace(R.id.container,
-                                    new ProfileFragment()).commit();
-
+                            FragmentTransaction ft2 = getSupportFragmentManager().beginTransaction();
+                            ft2.replace(R.id.container, new ProfileFragment(),"");
+//                            getSupportFragmentManager().beginTransaction().replace(R.id.container,
+//                                    new ProfileFragment()).addToBackStack(null).commit();
+                            ft2.addToBackStack(null);
+                            ft2.commit();
                             return true;
 
                         case R.id.nav_users:
@@ -101,6 +109,7 @@ public class DashboardActivity extends AppCompatActivity {
                             selectedFragment = new UsersFragment();
                             FragmentTransaction ft3 = getSupportFragmentManager().beginTransaction();
                             ft3.replace(R.id.container, selectedFragment, "");
+                            ft3.addToBackStack(null);
                             ft3.commit();
                             return true;
                         case R.id.nav_add:
@@ -149,7 +158,14 @@ public class DashboardActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+//        super.onBackPressed();
+        if(System.currentTimeMillis() - lastTimeBackPressed < 1500){
+            finish();
+            return;
+        }
+        lastTimeBackPressed = System.currentTimeMillis();
+        Toast.makeText(this,"'뒤로' 버튼을 두번 누르면 종료합니다", Toast.LENGTH_SHORT).show();
+
     }
 
 
