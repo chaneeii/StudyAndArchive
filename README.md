@@ -36,7 +36,8 @@ Android Social Media App for Sharing Study-Time <br>
  - Improving Dashboard of your study records
  - Edit/delete Posts
 
-## Documentation for start project using Firebase
+## Documentation for starting project using Firebase
+YOU NEED YOUR OWN API
 * [Firebase setup](https://firebase.google.com/docs/android/setup)
 * [auth] https://firebase.google.com/docs/auth
 * [Realtime Database] https://firebase.google.com/docs/database
