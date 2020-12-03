@@ -21,6 +21,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -166,6 +167,29 @@ public class PostDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 likePost();
+
+            }
+        });
+
+
+        //comment btn
+        // 코맨트 바로 입력가능하게 소프트 키보드 올리기
+        
+        commentBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                commentEt.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        commentEt.setFocusableInTouchMode(true);
+                        commentEt.requestFocus();
+
+                        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+
+                        imm.showSoftInput(commentEt,0);
+
+                    }
+                });
 
             }
         });
