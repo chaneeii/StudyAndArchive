@@ -174,7 +174,6 @@ public class PostDetailActivity extends AppCompatActivity {
 
         //comment btn
         // 코맨트 바로 입력가능하게 소프트 키보드 올리기
-        
         commentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

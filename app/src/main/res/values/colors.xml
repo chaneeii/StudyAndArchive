@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#7B68EE</color>
-    <color name="colorPrimaryDark">#7B68EE</color>
-    <color name="colorAccent">#40E0D0</color>
+<!--    <color name="colorPrimary">#7B68EE</color>-->
+<!--    <color name="colorPrimaryDark">#7B68EE</color>-->
+<!--    <color name="colorAccent">#40E0D0</color>-->
     <color name="colorGray">#787878</color>
     <color name="colorBlack">#000000</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="chipColor">#F2F2F2</color>
     <color name="chipYellow">#fff44f</color>
     <color name="fire">#FF441A</color>
+
+    <color name="colorPrimary">#14b1ab</color>
+    <color name="colorPrimaryDark">#14b1ab</color>
+    <color name="colorAccent">#e8505b</color>
+
+
 </resources>

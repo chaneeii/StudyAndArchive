@@ -7,14 +7,14 @@
             <item android:top="3dp">
                 <shape>
                     <corners android:radius="100dp" />
-                    <solid android:color="#1f000000" />
+                    <solid android:color="@color/colorPrimaryDark"  />
                 </shape>
             </item>
             <!-- background (위로) -->
             <item android:bottom="3dp">
                 <shape>
                     <corners android:radius="100dp" />
-                    <solid android:color="#7B68EE" />
+                    <solid android:color="@color/colorPrimaryDark"  />
                 </shape>
             </item>
         </layer-list>
